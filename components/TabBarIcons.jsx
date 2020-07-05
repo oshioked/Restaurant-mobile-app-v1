@@ -18,6 +18,12 @@ export const SearchTabIcon = ({tintColor}) =>{
     )
 }
 
+export const CartTabIcon = ({tintColor}) =>{
+    return(
+        <Ionicons name="ios-basket" size={25} color = {tintColor}/>
+    )
+}
+
 export const OrderTabIcon = ({tintColor}) =>{
     return(
         <MaterialCommunityIcons name="truck-fast" size={27} color = {tintColor}/>

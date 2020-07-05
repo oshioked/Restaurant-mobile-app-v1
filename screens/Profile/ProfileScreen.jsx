@@ -1,48 +1,56 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, ScrollView, Switch} from 'react-native';
-import {} from '@expo/vector-icons';
 import colors from '../../constants/colors';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import CustomHeaderButton from '../../components/CustomHeaderButton';
+import ProfileInfoSet from '../../components/ProfileInfoSet';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useSelector } from 'react-redux';
 
 const ProfileScreen = props =>{
+    const orderNumber = useSelector(state => state.order.orders.filter(order => order.status.toLowerCase() === 'pending').length);
+
+    const onOrderPressHandler = () =>{
+        props.navigation.navigate('Order')
+    }
     return(
         <View style = {styles.screen}>
         <ScrollView contentContainerStyle = {styles.contentContainer}>
+
             <Image style = {styles.profilePicture} source = {require('../../assets/images/profilePicture.png')}/>
             <Text style = {styles.fullName}>Daniel Oshioke Iyogwoya</Text>
+
+            {/* Progress section */}
             <View style = {styles.progressBar}>
                 <View style = {styles.progressIndicator}/>
             </View>
-            <Text style = {styles.progressComment}><Text style = {{color : '#4D9654'}}>N3 000 of N10 000.</Text>  Spend extra N 7 000 to qualify for a free N 1200 meal.</Text>
+            <Text style = {styles.progressComment}>
+                <Text style = {{color : '#4D9654'}}>{'N3 000 of N10 000. '}</Text>
+                Spend extra N 7 000 to qualify for a free N 1200 meal.
+            </Text>
             
             <View style = {styles.infoSection}>
-                <Text>PROFILE INFO.</Text>
-                <View style = {styles.infoSet}>
-                    <Text style = {styles.infoProp}>Phone</Text>
-                    <Text numberOfLines = {1} style = {styles.infoValue}>08056055305</Text>
-                </View>
-                <View style = {styles.infoSet}>
-                    <Text style = {styles.infoProp}>Email</Text>
-                    <Text numberOfLines = {1} style = {styles.infoValue}>Danieloshos3@gmail.com</Text>
-                </View>
-                <View style = {styles.infoSet}>
-                    <Text style = {styles.infoProp}>Address</Text>
-                    <Text numberOfLines = {1} style = {styles.infoValue}>No 8, Lucky Dube Street, New Havens, California, U.S.A</Text>
-                </View>
-                <View style = {styles.infoSet}>
-                    <Text style = {styles.infoProp}>City/State</Text>
-                    <Text numberOfLines = {1} style = {styles.infoValue}>Warri/Delta State</Text>
-                </View>
-            </View>
-            <View style = {styles.infoSection}>
-                <Text>SETTINGS</Text>
-                <View style = {styles.infoSet}>
-                    <Text style = {styles.infoProp}>Night Mode</Text>
-                    <Switch />
+
+                {/* The order section */}
+                <TouchableOpacity activeOpacity = {0.8} onPress = {onOrderPressHandler} style = {styles.ordersInfo}>
+                <View style = {{...styles.infoSet}}>
                     
-                    
-                </View>
+                        <Text style = {{...styles.infoProp, ...styles.orderLabel}}>Orders</Text>
+                        <View style = {styles.orderIconContainer}>
+                            <View style = {styles.orderIcon}>
+                                <Text style = {styles.orderNumber}>{orderNumber}</Text>
+                            </View>
+                        </View>
+                </View>    
+                    </TouchableOpacity>
+                
+
+                {/* Profile Info section */}
+                <Text style = {styles.infoSectionTitle}>PROFILE INFO.</Text>
+                <ProfileInfoSet label = "Phone" value = '08056055305'/>
+                <ProfileInfoSet label = "Email" value = 'Danieloshos3@gmail.com'/>
+                <ProfileInfoSet label = "Address" value = 'No 8, Lucky Dube Street, New Havens, California, U.S.A'/>
+                <ProfileInfoSet label = "City/State" value = 'Warri/Delta State'/>
             </View>
         </ScrollView>
         </View>
@@ -106,11 +114,7 @@ const styles = StyleSheet.create({
         width: '85%',
         fontSize: 11
     },
-    infoSection: {
-        alignItems: 'flex-start',
-        width: '90%',
-        marginTop: 50
-    },
+    
     infoSet: {
         width: '100%',
         borderBottomColor: colors.primaryShade2,
@@ -125,11 +129,31 @@ const styles = StyleSheet.create({
         opacity: 0.4,
         fontSize: 14
     },
-    infoValue: {
-        width: '70%',
-        opacity: 0.8,
-        textAlign: 'left',
-        fontSize: 14
+    infoSection: {
+        alignItems: 'flex-start',
+        width: '90%',
+        marginTop: 50
+    },
+    infoSectionTitle: {
+        opacity: 0.4, 
+        fontSize: 12,
+        marginTop: 50
+    },
+    orderIcon: {
+        width: 20,
+        height: 20,
+        backgroundColor: 'red',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 10
+    },
+    orderNumber: {
+        color: 'white',
+        fontWeight: '700'
+    },
+    ordersInfo: {
+        width: '100%',
+        flexDirection: 'row'
     }
 })
 

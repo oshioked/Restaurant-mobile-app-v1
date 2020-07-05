@@ -6,7 +6,6 @@ class Meal{
         this.price = price;
         this.description = description;
         this.categories = categories;
-
         this.readyTime = readyTime;
     }
 }

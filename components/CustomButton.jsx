@@ -11,7 +11,7 @@ const CustomButton = props =>{
 
     return(
         <TouchableCmp style = {{...styles.buttonContainer, ...props.style}} activeOpacity = {0.8} onPress = {props.onPress}>
-            <Text style = {styles.buttonText}>{props.children}</Text>
+            <Text style = {{...styles.buttonText, ...props.textStyle}}>{props.children}</Text>
         </TouchableCmp>   
     )
 
@@ -22,10 +22,13 @@ const styles = StyleSheet.create({
         backgroundColor: colors.primaryShade2,
         paddingHorizontal: 30,
         paddingVertical: 10,
+        flexDirection: 'row',
+        justifyContent: 'center',
         borderRadius: 5
     },
     buttonText: {
-        color: 'white'
+        color: 'white',
+        textAlign: 'center'
     }
 })
 

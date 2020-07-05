@@ -1,26 +1,50 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Text, StyleSheet, TouchableOpacity, View } from 'react-native';
 import Card from './Card';
 import CustomButton from './CustomButton';
 
 const OrderCard = props =>{
+    const [viewAll, setViewAll] = useState(false);
+
+    const onViewAllHandler = ()=>{
+        setViewAll(!viewAll)
+    }
+
     const onTrackPressHandler = () =>{
         props.navigation.navigate('TrackOrder')
     }
+    const orderItems = props.order.items;
+    const itemTitleAndQtySet = orderItems.map(item => `${item.meal.title} (${item.quantity})`);
+    
     return(
         <Card>
             <View style = {styles.orderCard}>
                 <View style = {styles.timeStatusBlock}>
-                    <Text style = {styles.orderedTime}>4 : 30PM. 6th June, 2020.</Text>
-                    <Text style = {styles.orderStatus}>Status: 
-                        <Text style = {{color: 'green'}}> Arrived</Text>
+                    <Text style = {styles.orderedDate}>{props.order.readableDate}</Text>
+                    <Text style = {styles.orderStatus}>{'Status: '}
+                        <Text style = {{color: 'green'}}>{props.order.status}</Text>
                     </Text>
                 </View>
-                <Text numberOfLines = {1} style = {styles.mealsRowText}>Spagetti and turkey (2), Coke drink (2), Barbeque fish...</Text>
-                <TouchableOpacity onLongPress = {()=>alert('How far')}>
-                    <Text>View All</Text>
+                {
+                    viewAll?
+                    <View>
+                        {
+                            orderItems.map(item=>(
+                                <View key = {item.meal.id} style = {styles.cartItemRow}>
+                                    <Text style = {styles.mealText}>{`${item.meal.title} (${item.quantity})`}</Text>
+                                    <Text style = {styles.mealPriceText}>N{item.amount * item.quantity}</Text>
+                                </View>
+                            ))
+                        }
+                    </View>
+                    :
+                    <Text numberOfLines = {1} style = {styles.mealsRowText}>{itemTitleAndQtySet.join(', ')}</Text>
+                }
+                
+                <TouchableOpacity onPress = {onViewAllHandler}>
+                    <Text style = {styles.viewText}>{ viewAll ? 'View less' : 'View All'}</Text>
                 </TouchableOpacity>
-                <Text>$140.99</Text>
+                <Text style = {styles.totalAmount}>N{props.order.totalAmount}</Text>
                 <CustomButton style = {styles.button} onPress = {onTrackPressHandler}>
                     Track on map
                 </CustomButton>
@@ -35,7 +59,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         marginVertical: 10,
         borderRadius: 10,
-        padding: 15,
+        padding: 15, 
         marginHorizontal: 15,
         overflow: 'hidden',
         minHeight: 180
@@ -45,7 +69,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         marginBottom: 20,
     },
-    orderedTime: {
+    orderedDate: {
         opacity: 0.3
     },
     orderStatus: {
@@ -60,6 +84,31 @@ const styles = StyleSheet.create({
         marginTop: 'auto',
         alignSelf: 'flex-end',
         paddingHorizontal: 15
+    },
+    cartItemRow: {
+        width: "100%",
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 10
+    },
+    mealText: {
+        width: '80%',
+        textAlign: 'left',
+        fontWeight: '600',
+        opacity: 0.8,
+    },
+    totalAmount: {
+        width: '100%',
+        textAlign: 'right',
+        marginRight: 10,
+        marginTop: 0,
+        marginBottom: 25,
+        fontWeight: '500'
+    },
+    viewText: {
+        color: '#9B7F98',
+        fontSize: 12
     }
 })
 

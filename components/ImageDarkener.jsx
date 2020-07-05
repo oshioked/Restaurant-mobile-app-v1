@@ -2,7 +2,8 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 
 const ImageDarkener = props =>
-    <View style = {styles.imageDarkener}/>
+
+    <View style = {{...styles.imageDarkener, opacity: (props.opacity) ? props.opacity : 0.3}}/>
 
 
 const styles = StyleSheet.create({
@@ -10,8 +11,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         height: '100%',
         width: '100%',
-        backgroundColor: 'black',
-        opacity: 0.3
+        backgroundColor: 'black'
     }
 })
 

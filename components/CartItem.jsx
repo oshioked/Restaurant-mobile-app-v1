@@ -1,32 +1,20 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import Card from './Card';
-import {Ionicons} from '@expo/vector-icons';
 import colors from '../constants/colors';
+import {Ionicons} from '@expo/vector-icons'
 import { useDispatch } from 'react-redux';
-import { removeFavMeal } from '../Redux/user/user.actions';
-import { addItem } from '../Redux/cart/cart.actions';
+import { clearItemFromCart } from '../Redux/cart/cart.actions';
 
-const FavoriteCard = props =>{
+const CartItem = props => {
     const dispatch = useDispatch();
-    
-    const onRemoveMealHandler = () =>{
-        dispatch(removeFavMeal(props.meal))
-    }
 
-    const onAddToCart = () =>{
-        dispatch(addItem(props.meal))
+    const onClearFromCart = () =>{
+        dispatch(clearItemFromCart(props.meal))
     }
-
-    const onMealSelect = () =>{
-        props.navigation.navigate('MealDetail', {
-            mealDetails: props.meal
-        })
-    }
-
     return(
         <Card>
-            <TouchableOpacity activeOpacity = {0.8} onPress = {onMealSelect} style = {styles.favoriteContainer}>
+            <TouchableOpacity activeOpacity = {0.8} style = {styles.favoriteContainer}>
                 <Image style =  {styles.image} source = {{uri: props.meal.imageUri}}/>
                 <View>
                     <Text style = {styles.mealName}>{props.meal.title}</Text>
@@ -35,21 +23,14 @@ const FavoriteCard = props =>{
                 </View>
                 <View style = {styles.iconsContainer}>
                     <View style = {styles.icons}>
-                        <TouchableOpacity onPress = {onRemoveMealHandler} style = {styles.heartIcon}>
-                            <Ionicons name = 'ios-heart-dislike' size = {22}/>
-                        </TouchableOpacity>
-                        
-                        <TouchableOpacity onPress = {onAddToCart} style = {styles.addIcon}>
-                            <Ionicons name="ios-add-circle-outline" size={29} color="#2BBA42" />
-                        </TouchableOpacity>
-                                               
+                        <TouchableOpacity onPress = {onClearFromCart} style = {styles.addIcon}>
+                            <Ionicons name="ios-trash" size={25} color="red" />
+                        </TouchableOpacity>         
                     </View>
-
                 </View>
             </TouchableOpacity>
             
         </Card>
-
     )
 }
 
@@ -96,11 +77,11 @@ const styles = StyleSheet.create({
         opacity: 0.4
     },
     addIcon: {
-        padding: 10,
+        padding: 11,
         paddingHorizontal: 17,
         backgroundColor: colors.primaryShade1,
         borderTopLeftRadius: 10
     }
 })
 
-export default FavoriteCard;
+export default CartItem;

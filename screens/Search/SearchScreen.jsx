@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, Image, Button, Platform} from 'react-native';
 import CustomTextInput from '../../components/CustomTextInput';
 import colors from '../../constants/colors';
@@ -6,16 +6,26 @@ import { ScrollView } from 'react-native-gesture-handler';
 import CustomButton from '../../components/CustomButton';
 
 const SearchScreen = props =>{
+    const [input, setInput] = useState('');
     const onExplorePress = () =>{
         props.navigation.navigate("Explore")
     }
-    const onSearchSubmit = () =>{
-        props.navigation.navigate('SearchResults')
+    const onSearchSubmit = (input) =>{
+        if(input.length <= 0) return;
+        props.navigation.navigate('SearchResults', {
+            searchQuery: input
+        })
     }
+    
     return(
         <SafeAreaView style = {styles.screen}>
             <View style = {styles.textInputContainer}>
-                <CustomTextInput onSubmit = {onSearchSubmit} style = {styles.textInput}/>
+                <CustomTextInput
+                    placeholder = 'Search meals by title or categories' 
+                    onSubmit = {onSearchSubmit} 
+                    inputStyle = {styles.textInput}
+                    cancelTextStyle = {{color: 'black'}}
+                />
             </View>
             <ScrollView contentContainerStyle = {styles.contentContainer}>
                 <Image source = {require('../../assets/images/searchScreenImage.png')}/>

@@ -1,30 +1,81 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, ImageBackground, FlatList, VirtualizedList} from 'react-native';
+import React, {useEffect, useState, useCallback} from 'react';
+import { View, Text, StyleSheet, ImageBackground, FlatList, ActivityIndicator} from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import CustomHeaderButton from '../../components/CustomHeaderButton';
 import ImageDarkener from '../../components/ImageDarkener';
 import MealItem from '../../components/MealItem';
 import CustomTextInput from '../../components/CustomTextInput';
-import {useSelector} from 'react-redux'
+import {useSelector, useDispatch} from 'react-redux'
+import FilterModal from '../FilterModal/FilterModal';
+import { fetchCategoryMeals } from '../../Redux/meals/meals.action';
 
 const CategoryMealsScreen = props =>{
+    const [filterDisplay, setFilterDisplay] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const toggleFilterDisplay = useCallback(() =>{
+        setFilterDisplay(!filterDisplay)
+    }, [filterDisplay, setFilterDisplay])
+
+    useEffect(()=>{
+        props.navigation.setParams({toggleFilterDisplay})
+    }, [toggleFilterDisplay])
+
     const categoryId = props.navigation.getParam('categoryId');
-    const categoryName = props.navigation.getParam('categoryName');
-    const category = useSelector(state => state.Meals.categories.find(category=> category.id === categoryId));
-    const categoryMeals = useSelector(state => 
-        state.Meals.meals.filter(meal => 
-            meal.categories.map(cat => {
-                return cat.toLowerCase();
-                
-            }).includes(categoryName.toLowerCase())
-        )
+
+    const categoryDetails = useSelector(state => state.categories.allCategories.find(category=> category.id === categoryId));
+    const categoryMeals = useSelector(state => state.Meals.categoryMeals[categoryId]);
+
+    const dispatch = useDispatch();
+    const fetchMeals = useCallback(async (searchQuery) =>{
+        try {
+            setIsLoading(true);
+            await dispatch(fetchCategoryMeals(categoryId, searchQuery))
+        } catch (error) {
+            
+        }
+        setIsLoading(false)   
+    }, [setIsLoading, dispatch, categoryId])
+
+    useEffect(()=>{
+        if(!Boolean(categoryMeals)){
+           fetchMeals(); 
+        }
+        
+    }, [fetchMeals])
+
+    const onSearchHandler = (input) =>{
+        if(input.length <= 0) return;
+        fetchMeals(input)
+    }
+
+    const HeaderComponent = () =>(
+        <ImageBackground style = {styles.imgBg} source = {require('../../dummyData/images/Meals.jpg')}>
+            <ImageDarkener/>
+            <View style = {styles.detailsBlock}>
+                <Text style = {styles.blockTitle}>{categoryDetails.title}</Text>
+                <Text style = {styles.blockText}>{categoryDetails.description}</Text>
+            </View>
+            <CustomTextInput 
+                placeholder = {`Search ${categoryDetails.title}`}
+                onSubmit = {onSearchHandler}
+                returnKeyLabel = 'Search'
+                style = {styles.CustomTextInput}
+            />
+        </ImageBackground>
     )
 
-    const onMealSelectHandler = (id) =>{
-        props.navigation.navigate('MealDetail', {
-            mealId: id
-        })
+    if(isLoading){
+        return(
+            <View style = {styles.screen}>
+                <HeaderComponent/>
+                <View style = {{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                    <ActivityIndicator size = 'large'/>
+                </View>
+            </View>
+        )
     }
+
     return(
         <View style = {styles.screen}>
             <FlatList
@@ -33,39 +84,26 @@ const CategoryMealsScreen = props =>{
                 data = {categoryMeals}
                 renderItem = {itemData => 
                     <MealItem 
-                        onPress = {()=>onMealSelectHandler(itemData.item.id)} 
                         style = {styles.mealItem} 
-                        imageUri = {itemData.item.imageUri}
-                        title = {itemData.item.title}
-                        price = {itemData.item.price}
-                        readyTime = {itemData.item.readyTime}
+                        meal = {itemData.item}
+                        navigation = {props.navigation}
                     /> 
                 }
-                ListHeaderComponent = { () =>
-                    <ImageBackground style = {styles.imgBg} source = {category.imageUri}>
-                        <ImageDarkener/>
-                        <View style = {styles.detailsBlock}>
-                            <Text style = {styles.blockTitle}>{category.title}</Text>
-                            <Text style = {styles.blockText}>{category.description}</Text>
-                        </View>
-                        <CustomTextInput placeholder = {`Search ${category.title}`}/>
-                    </ImageBackground>
-                }
+                ListHeaderComponent = {HeaderComponent}
             />
-            
+            <FilterModal visible = {filterDisplay}/>
         </View>
     )
 }
 
 CategoryMealsScreen.navigationOptions = navData =>{
-
     const categoryTitle = navData.navigation.getParam('categoryName');
-
+    const toggleFilterDisplay = navData.navigation.getParam('toggleFilterDisplay')
     return({
         headerBackTitle: 'Back',
         headerTitle: categoryTitle,
         headerRight: () => <HeaderButtons HeaderButtonComponent = {CustomHeaderButton}>
-            <Item title = 'Options' iconName = 'ios-options' onPress = {()=>{}}/>
+            <Item title = 'Options' iconName = 'ios-options' onPress = {toggleFilterDisplay}/>
         </HeaderButtons>
     })
 }
@@ -73,12 +111,13 @@ CategoryMealsScreen.navigationOptions = navData =>{
 const styles = StyleSheet.create({
     screen: {
         backgroundColor: 'white',
+        flex: 1
     },
     imgBg: {
         width: '100%',
         height: 250,
         justifyContent: 'flex-end',
-        marginBottom: 15
+        marginBottom: 15,
     },
     detailsBlock: {
         marginHorizontal: 15
@@ -93,6 +132,9 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 14,
         fontWeight: '500'
+    },
+    CustomTextInput: {
+        marginHorizontal: 15
     },
     columnWrapper: {
         marginHorizontal: 7.5

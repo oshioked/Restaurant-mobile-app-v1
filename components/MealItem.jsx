@@ -3,18 +3,23 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import colors from '../constants/colors';
 
 const MealItem = props =>{
+
+    const onMealSelectHandler = () =>{
+        props.navigation.navigate('MealDetail', {
+            mealDetails: props.meal,
+        })
+    }
     
     return(
-        <TouchableOpacity onPress = {props.onPress} activeOpacity = {0.8} style = {{...styles.mealItem, ...props.style}}>
+        <TouchableOpacity onPress = {onMealSelectHandler} activeOpacity = {0.8} style = {{...styles.mealItem, ...props.style}}>
             <View style = {styles.mealItemContainer}>
-                <Image style = {styles.mealImage} source = {{uri: props.imageUri}}/>
-                <Text numberOfLines = {1} style = {styles.mealName}>{props.title}</Text>
+                <Image style = {styles.mealImage} source = {{uri: props.meal.imageUri}}/>
+                <Text numberOfLines = {1} style = {styles.mealName}>{props.meal.title}</Text>
                 <View style = {styles.textBlock}>
-                    <Text style = {styles.mealPrice}>N{props.price}</Text>
+                    <Text style = {styles.mealPrice}>N{props.meal.price}</Text>
                     <Text style = {styles.mealTime}>4M</Text>
                 </View>
             </View>
-            
         </TouchableOpacity>
     )
 }

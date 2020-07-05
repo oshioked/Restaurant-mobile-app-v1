@@ -4,20 +4,26 @@ import ImageDarkener from './ImageDarkener';
 import Card from './Card';
 
 const CategoryCard = props =>{
+    const {category} = props;
+    const onCategoryPressHandler = (name, id) =>{
+        props.navigation.navigate('CategoryMeals', {
+            categoryName: category.title,
+            categoryId: category.id
+        })
+    }
+
     return(
-       
-            <TouchableOpacity activeOpacity = {0.85} style = {{...styles.categoryCard, ...props.style}} onPress = {props.onPress}>
+            <TouchableOpacity activeOpacity = {0.85} style = {{...styles.categoryCard, ...props.style}} onPress = {onCategoryPressHandler}>
                  <Card>
-                <ImageBackground style = {styles.imgBg}  source = {props.imageUri}>
+                <ImageBackground style = {styles.imgBg} source = {require('../dummyData/images/breakfasts.jpg')}>
                     <ImageDarkener/>
                     <View style = {styles.detailsBlock}>
-                        <Text  style = {styles.blockTitle}>{props.title}</Text>
-                        <Text numberOfLines = {1} style = {styles.blockText}>{props.description}</Text>
+                        <Text  style = {styles.blockTitle}>{category.title}</Text>
+                        <Text numberOfLines = {1} style = {styles.blockText}>{category.description}</Text>
                     </View>
                 </ImageBackground>
                 </Card>
             </TouchableOpacity>
-        
     )
 }
 
@@ -32,6 +38,7 @@ const styles = StyleSheet.create({
     imgBg: {
         width: '100%',
         height: '100%',
+        minHeight: 200,
         justifyContent: 'flex-end'
     },
     detailsBlock: {
