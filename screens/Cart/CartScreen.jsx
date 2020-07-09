@@ -5,11 +5,16 @@ import CustomHeaderButton from '../../components/CustomHeaderButton';
 import colors from '../../constants/colors';
 import CartItem from '../../components/CartItem';
 import { useSelector, useDispatch } from 'react-redux';
-import { addOrder } from '../../Redux/orders/orders.actions';
+import { addOrder } from '../../Redux/user/user.actions';
 
 const CartScreen = props =>{
     const cartItems = useSelector(state => state.cart.items);
     const totalAmount = useSelector(state => state.cart.totalAmount);
+    let totalTime;
+    if(cartItems.length){
+        totalTime = cartItems.map(item => item.meal.readyTime).reduce((a, b) => a + b);
+    }
+    const userBonusPercent = useSelector(state => state.user.bonusPercentage)
     
     useEffect(()=>{
         props.navigation.setParams({
@@ -32,7 +37,16 @@ const CartScreen = props =>{
     const headerComponent = (
         <View style = {styles.header} >
             <View style = {styles.infoBar}>
-                <Text style = {styles.infoText}>Spend an additional N{10000 - totalAmount} to qualify for a free N1200 meal.</Text>
+                <Text style = {styles.infoText}>
+                {
+                    userBonusPercent >= 1 ?
+                    `You currently have a N1200 discount`
+                    : 
+                    (totalAmount + (userBonusPercent * 10000)) >= 10000
+                    ? `Congrats! With this, you qualify for a N1200 on your next purchase.`
+                    :`Spend an additional N${10000 - (totalAmount + (userBonusPercent * 10000))} to qualify for a free N1200 discount.`
+                }
+                </Text>
             </View>
             <View style = {styles.orderDetailsBlock}>
                 
@@ -42,7 +56,7 @@ const CartScreen = props =>{
                 </View>
                 <View style = {{...styles.totalAmountBar, ...styles.subInfoSet}}>
                     <Text>Delivery Time:</Text>
-                    <Text>35 minutes 57 seconds</Text>
+                    <Text>{Math.round(totalTime/60)} Minutes</Text>
                 </View>
             </View>
         </View>
@@ -52,11 +66,12 @@ const CartScreen = props =>{
             <FlatList
                 style = {{backgroundColor: 'white'}}
                 data = {cartItems}
-                keyExtractor = {item => item.meal.id}
+                keyExtractor = {item => (item.meal.id).toString()}
                 ListHeaderComponent = {headerComponent}
                 renderItem = {itemData =>(
                     <CartItem
                         meal = {itemData.item.meal}
+                        quantity = {itemData.item.quantity}
                     />
                 )}
             />

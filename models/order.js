@@ -7,7 +7,6 @@ class Order {
         this.status = status;
         this.date = date;
         this.totalAmount = totalAmount;
-        this.UserId = UserId;
     }
     get readableDate(){
         return moment(this.date).format('MMMM Do YYYY, hh:mm')

@@ -1,14 +1,18 @@
-import React, { useState } from 'react';
-import { KeyboardAvoidingView, Dimensions, View, StyleSheet, Keyboard } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Text, View, StyleSheet, Keyboard, ActivityIndicator } from 'react-native';
 import CustomButton from './CustomButton';
 import AuthFormTextInput from './AuthFormTextInput';
 import validate from 'validate.js';
+import { useDispatch } from 'react-redux';
+import { logIn } from '../Redux/user/user.actions';
 
 
 const SignInForm = (props) =>{
     const [email, setEmail] = useState({value: '', errorMsg: ''});
     const [password, setPassword] = useState({value: '', errorMsg: ''});
+    const [signInError, setSignInError] = useState();
     const [isFirstTrial, setIsFirstTrial] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
 
     const constraints = {
         email: {
@@ -26,6 +30,13 @@ const SignInForm = (props) =>{
             }
         }
     }
+
+    useEffect(()=>{
+        if(!signInError)return;
+        setTimeout(()=>{
+            setSignInError(null)
+        }, 2500)
+    }, [signInError]);
 
     const checkValidate = () =>{
         return validate({ 
@@ -50,15 +61,26 @@ const SignInForm = (props) =>{
         }
     } 
    
+    const dispatch = useDispatch();
 
-    const onSignIn = () =>{
+    const onSignIn = async () =>{
+        setIsFirstTrial(false);
+        
         const errors = checkValidate();
         if(errors){
-            updateInputErrorMsgs()
+            updateInputErrorMsgs();
         }else{
-            props.navigation.navigate("Shop")
+            setIsLoading(true);
+            try {
+                await dispatch(logIn({email: email.value, password: password.value}));
+                props.navigation.navigate('Shop');
+            } catch (error) {
+                console.log(error, 'login')
+                setSignInError(error.message)
+            }
+           setIsLoading(false);
         }
-        setIsFirstTrial(false)
+        
     }
 
     return(
@@ -85,11 +107,22 @@ const SignInForm = (props) =>{
                 secureTextEntry = {true}
                 onBlur = {isFirstTrial ? null:  updateInputErrorMsgs}
                 leftIcon={{ type: 'ion-icons', name: 'lock-outline'}}
-                onSubmitEditing = {() => {Keyboard.dismiss; updateInputErrorMsgs;}}
+                onSubmitEditing = {() => {Keyboard.dismiss(); updateInputErrorMsgs();}}
             />
             <CustomButton onPress = {onSignIn} style = {styles.registerButton}>
-                SignIn
+                {
+                    isLoading ? <ActivityIndicator size = 'small' color = 'white'/>
+                    : 'Sign In'
+                }
             </CustomButton>
+            {
+                signInError ?
+                <Text style = {styles.formError}>
+                    {signInError}
+                </Text>  
+                : null          
+            }
+
         </View>
     )
 }
@@ -113,6 +146,13 @@ const styles = StyleSheet.create({
     },
     arrowIcon: {
         color: 'white'
+    },
+    formError: {
+        color: 'red',
+        textAlign: 'left',
+        width: '90%',
+        marginVertical: 5,
+        opacity: 0.7
     }
 })
 

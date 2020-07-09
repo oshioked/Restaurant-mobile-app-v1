@@ -10,9 +10,9 @@ import { addFavMeal, removeFavMeal } from '../../Redux/user/user.actions';
 
 const MealDetailsScreen = props =>{
     const meal = props.navigation.getParam('mealDetails');
-    const isFavorite = useSelector(state => state.user.favoriteMeals.find(id => id === meal.id))
+    
+    const isFavorite = useSelector(state => state.user.favoriteMeals.find(id => id == meal.id))
     const dispatch = useDispatch();
-
     const onAddToCart = (meal) =>{ 
         dispatch(addItem(meal))
     }
@@ -42,7 +42,7 @@ const MealDetailsScreen = props =>{
                 </View>
                 <View style = {styles.detailSet}>
                     <Text style = {{...styles.detailTitle, ...styles.mealTime}}>READY TIME</Text>
-                    <Text>{meal.readyTime}</Text>
+                    <Text>{Math.round(meal.readyTime/60)} minutes</Text>
                 </View>
                 <View style = {styles.detailSet}>
                     <Text style = {{...styles.detailTitle, ...styles.mealDescription}}>DESCRIPTION</Text>

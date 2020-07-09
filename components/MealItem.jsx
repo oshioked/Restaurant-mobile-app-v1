@@ -17,7 +17,7 @@ const MealItem = props =>{
                 <Text numberOfLines = {1} style = {styles.mealName}>{props.meal.title}</Text>
                 <View style = {styles.textBlock}>
                     <Text style = {styles.mealPrice}>N{props.meal.price}</Text>
-                    <Text style = {styles.mealTime}>4M</Text>
+                    <Text style = {styles.mealTime}>{Math.round(props.meal.readyTime/60)}M</Text>
                 </View>
             </View>
         </TouchableOpacity>
@@ -43,6 +43,9 @@ const styles = StyleSheet.create({
     },
     mealName: {
         marginVertical: 5
+    },
+    mealTime: {
+        color: colors.primaryShade2,
     },
     textBlock:{
         flexDirection: 'row',

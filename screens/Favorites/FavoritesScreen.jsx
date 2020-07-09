@@ -7,7 +7,7 @@ import { fetchUsersFavMeals } from '../../Redux/meals/meals.action';
 const FavoritesScreen = props =>{
     const [isLoading, setIsLoading] = useState(false);
     const favoriteMeals = useSelector(state => state.Meals.userFavMeals);
-
+    
     const dispatch = useDispatch();
     const fetchFavMeals = useCallback(async () =>{
         setIsLoading(true);
@@ -25,7 +25,7 @@ const FavoritesScreen = props =>{
 
     if(isLoading){
         return(
-            <View style = {{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <View style = {{flex: 1, justifyContent: 'center', backgroundColor: 'white', alignItems: 'center'}}>
                 <ActivityIndicator size = 'large'/>
             </View>
         )
@@ -36,6 +36,7 @@ const FavoritesScreen = props =>{
         <FlatList
             style = {styles.screen}
             data = {favoriteMeals}
+            keyExtractor = {item => (item.id).toString()}
             renderItem = {itemData => (
                 <FavoriteCard 
                     navigation = {props.navigation}

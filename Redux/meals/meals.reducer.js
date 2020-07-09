@@ -1,6 +1,6 @@
-
 import { mealTypes } from "./meals.action";
 import { userTypes } from "../user/user.actions";
+import Meal from "../../models/Meal";
 
 
 const initialState = {
@@ -9,21 +9,40 @@ const initialState = {
     userFavMeals: []
 }
 
+
+// MEALS RESULTS FROM SERVER HAVE DIFFERENT OBJECT STRUCTURE. SO THIS CONVERTS THEM TO THE STRUCTURE ACCEPTED IN THIS NEIGHBORHOOD
+export const getMeals = (mealsResult) =>(
+    mealsResult.map(meal => (
+        new Meal(
+            meal.id,
+            meal.title,
+            meal.imageurl,
+            meal.price,
+            meal.description,
+            meal.categories,
+            meal.readytime
+        )
+    ))
+)
+
+
 const mealsReducer = (state = initialState, action) =>{
     switch (action.type) {
         case mealTypes.FETCH_TODAYS_MOST_ORDERED:
             return({
                 ...state,
-                mostOrderedMeals: action.payload
+
+                mostOrderedMeals: getMeals(action.payload)
             })
         case mealTypes.FETCH_CAT_MEALS:
             const {categoryMeals, categoryId} = action.payload;
-            state.categoryMeals[categoryId] = categoryMeals;
+            console.log(getMeals(categoryMeals))
+            state.categoryMeals[categoryId] = getMeals(categoryMeals);
             return({
                 ...state,
             })
         case mealTypes.FETCH_USER_FAV_MEALS:
-            const meals = action.payload;
+            const meals = getMeals(action.payload);
             return({
                 ...state,
                 userFavMeals: meals

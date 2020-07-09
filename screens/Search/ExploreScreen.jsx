@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, ActivityIndicator} from 'react-nati
 import CategoryCard from '../../components/CategoryCard';
 import colors from '../../constants/colors';
 import MealsSlide from '../../components/MealsSlide';
+import Meal from '../../models/Meal';
 
 const ExploreScreen = props =>{
    const [isLoading, setIsLoading] = useState(false)
@@ -18,16 +19,35 @@ const ExploreScreen = props =>{
         })
     }
 
+    /*
+     MEALS RESULTS FROM SERVER HAVE DIFFERENT OBJECT STRUCTURE. 
+     SO THIS CONVERTS THEM TO THE STRUCTURE ACCEPTED IN THIS NEIGHBORHOOD.
+     THIS IS ALSO IN THE MEALS REDUCER FILE. IT'S BAD PRACTICE(FETCHING DATA HERE) 
+     BUT I'M JUST TRYNA MAKE THIS WORK. :(
+     */
+    const getMeals = (mealsResult) =>(
+        mealsResult.map(meal => (
+            new Meal(
+                meal.id,
+                meal.title,
+                meal.imageurl,
+                meal.price,
+                meal.description,
+                meal.categories,
+                meal.readytime
+            )
+        ))
+    )
     const fetchRecommendedMeals = useCallback(async () =>{
         const response = await fetch('http://localhost:5000/meals/recommended');
         const data = await response.json();
-        setRecommendedMeals(data);
+        setRecommendedMeals(getMeals(data));
     }, [setRecommendedMeals])
 
     const fetchQuickestMeals = useCallback(async () =>{
         const response = await fetch('http://localhost:5000/meals/quickest');
         const data = await response.json();
-        setQuickestMeals(data)
+        setQuickestMeals(getMeals(data))
     }, [setQuickestMeals])
 
     const fetchHotCategories = useCallback(async () =>{

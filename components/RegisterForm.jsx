@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
-import {View, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import {View, StyleSheet, Text, ActivityIndicator } from 'react-native';
 import {Input} from 'react-native-elements';
 import CustomButton from './CustomButton';
 import AuthFormTextInput from './AuthFormTextInput';
 import validate from 'validate.js';
 import { Keyboard } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { registerUser } from '../Redux/user/user.actions';
 
 
 const RegisterForm = (props) =>{
@@ -14,6 +16,8 @@ const RegisterForm = (props) =>{
     const [password, setPassword] = useState({value: '', errorMsg: ''});
     const [confirmPassword, setConfirmPassword] = useState({value: '', errorMsg: ''});
     const [isFirstTrial, setIsFirstTrial] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
+    const [registerError, setRegisterError] = useState(undefined);
 
     const constraints = {
         fullName: {
@@ -21,7 +25,8 @@ const RegisterForm = (props) =>{
                 allowEmpty: false
             },
             length: {
-                minimum: 8
+                minimum: 6,
+                maximum: 50
             }
         },
         email: {
@@ -66,7 +71,6 @@ const RegisterForm = (props) =>{
         }, constraints);
     }
 
-
     const updateInputErrorMsgs = () =>{
         const errors = checkValidate();
         if(errors){
@@ -98,14 +102,37 @@ const RegisterForm = (props) =>{
         }
     }
 
-    const onRegister = () =>{
+    useEffect(()=>{
+        if(!registerError)return;
+        setTimeout(()=>{
+            setRegisterError(null)
+        }, 2500)
+    }, [registerError]);
+
+    const dispatch = useDispatch();
+
+    const onRegister = async () =>{
         const errors = checkValidate();
+        setIsFirstTrial(false);
+        
         if(errors){
             updateInputErrorMsgs();
         }else{
-            props.navigation.navigate("Shop")
+            try {
+                setIsLoading(true)
+                await dispatch(registerUser({
+                    fullName: fullName.value,
+                    email: email.value,
+                    phoneNumber: phoneNumber.value,
+                    password: password.value
+                }))
+                props.navigation.navigate("Shop");           
+            } catch (error) {
+                setRegisterError(error.message)
+            }
+            setIsLoading(false)
         }
-        setIsFirstTrial(false)
+        
     }
 
     return(
@@ -172,8 +199,17 @@ const RegisterForm = (props) =>{
                 onSubmitEditing = {() => {Keyboard.dismiss(); updateInputErrorMsgs();}}
             />
             <CustomButton onPress = {onRegister} style = {styles.registerButton}>
-                Register
+                {
+                    isLoading? <ActivityIndicator size = "small" color = 'white'/>
+                    : 'Register'
+                }
             </CustomButton>
+            {
+                (registerError) ? 
+                <Text style = {styles.formError}>{registerError}</Text>            
+                : null
+            }
+
         </View>
     )
 }
@@ -195,6 +231,13 @@ const styles = StyleSheet.create({
     },
     arrowIcon: {
         color: 'white'
+    },
+    formError: {
+        color: 'red',
+        textAlign: 'left',
+        width: '90%',
+        marginVertical: 5,
+        opacity: 0.7
     }
 })
 

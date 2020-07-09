@@ -1,15 +1,14 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import Navigator from './Navigation/ShopNavigator';
-import { Provider } from 'react-redux'
+import { StyleSheet, Text, View, AsyncStorage } from 'react-native';
+import { Provider, useDispatch } from 'react-redux'
 import store from './Redux/store';
+import Navigator from './Navigation/ShopNavigator';
 
 export default function App() {
   return (
     <Provider store = {store}>
       <Navigator/>
     </Provider>
-    
   );
 }
 

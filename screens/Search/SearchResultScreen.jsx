@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, FlatList, Image, ActivityIndicator} from 'react
 import MealItem from '../../components/MealItem';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import CustomHeaderButton from '../../components/CustomHeaderButton';
+import { getMeals } from '../../Redux/meals/meals.reducer';
 
 const SearchResultScreen = props =>{
     const [isLoading, setIsLoading] = useState(true);
@@ -14,7 +15,8 @@ const SearchResultScreen = props =>{
             setIsLoading(true);
             const response = await fetch(`http://localhost:5000/meals?searchQuery=${searchQuery}`);
             const meals = await response.json();
-            setSearchResultMeals(meals)
+            //getMeal function converts the mealsResults from the way the results are to the format accepted in the app.
+            setSearchResultMeals(getMeals(meals))
         } catch (error) {
 
         }

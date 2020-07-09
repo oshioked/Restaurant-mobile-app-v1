@@ -7,6 +7,7 @@ import MealsSlide from '../../components/MealsSlide';
 import { fetchAllCategories } from '../../Redux/categories/categories.actions';
 import { fetchHeader } from '../../Redux/home/home.actions';
 import { fetchMostOrdered } from '../../Redux/meals/meals.action';
+import { fetchUserData } from '../../Redux/user/user.actions';
 
 const CategoriesScreen = props =>{
     const [isLoading, setIsLoading] = useState(true);
@@ -16,6 +17,20 @@ const CategoriesScreen = props =>{
     const todaysMostOrderedMeals = useSelector(state => state.Meals.mostOrderedMeals)
     const dispatch = useDispatch();
 
+    // FETCH USER DATA ON APP'S FIRST SCREEN
+    const fetchUser = useCallback(async ()=>{
+        try {
+            await dispatch(fetchUserData())
+        } catch (error) {
+            // console.log(error)
+        }
+    }, [dispatch]);
+
+    useEffect(()=>{
+        fetchUser();
+    }, [fetchUser])
+
+    // FETCH SCREEN CONTENT
     const fetchContents = useCallback(async () =>{
         setIsLoading(true);
         try {
@@ -26,12 +41,13 @@ const CategoriesScreen = props =>{
             setError(error.message)
         }
         setIsLoading(false);
-    }, [setIsLoading, dispatch, setError])
+    }, [setIsLoading, dispatch, setError]);
 
     useEffect(()=>{
         fetchContents();
     }, [fetchContents])
-    
+
+
     if(isLoading){
         return(
             <SafeAreaView style = {styles.screen}>
@@ -74,8 +90,11 @@ const CategoriesScreen = props =>{
                     ))
                 }                    
                 </View>
-
-                    <MealsSlide title = "Today's Most Ordered Meals" navigation = {props.navigation} meals = {todaysMostOrderedMeals}/>
+                {
+                    todaysMostOrderedMeals.length === 0
+                    ? null
+                    : <MealsSlide title = "Today's Most Ordered Meals" navigation = {props.navigation} meals = {todaysMostOrderedMeals}/>
+                }
             </ScrollView>
         </SafeAreaView>
     )

@@ -10,7 +10,6 @@ import ExploreScreen from '../screens/Search/ExploreScreen';
 import SearchResultScreen from '../screens/Search/SearchResultScreen';
 import FavoritesScreen from '../screens/Favorites/FavoritesScreen';
 import ProfileScreen from '../screens/Profile/ProfileScreen';
-import EditProfileScreen from '../screens/Profile/EditProfileScreen';
 import colors from '../constants/colors';
 import { HomeTabIcon, SearchTabIcon, OrderTabIcon, FavoriteTabIcon, ProfileTabIcon, CartTabIcon } from '../components/TabBarIcons';
 import CartScreen from '../screens/Cart/CartScreen';
@@ -18,6 +17,7 @@ import OrdersOverviewScreen from '../screens/Orders/OrdersOverviewScreen';
 import TrackOrderScreen from '../screens/Orders/TrackOrderScreen';
 import AuthIntroScreen from '../screens/Auth/AuthIntroScreen';
 import AuthMainScreen from '../screens/Auth/AuthMainScreen';
+import StartUpScreen from '../screens/StartUpScreen';
 
 const defaultStackNavOptions = {
     headerTitleAlign: 'center',
@@ -76,7 +76,6 @@ const FavoritesNavigator = createStackNavigator({
 
 const ProfileNavigator = createStackNavigator({
     Profile: ProfileScreen,
-    ProfileEdit: EditProfileScreen,
     Order: OrdersOverviewScreen,
     TrackOrder: TrackOrderScreen
 },{
@@ -121,6 +120,7 @@ const AuthNavigator = createStackNavigator({
 })
 
 const MainNavigator = createSwitchNavigator({
+    StartUp: StartUpScreen,
     Auth: AuthNavigator,
     Shop: TabNavigator
 })

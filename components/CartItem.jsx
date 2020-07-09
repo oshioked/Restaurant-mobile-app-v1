@@ -19,7 +19,7 @@ const CartItem = props => {
                 <View>
                     <Text style = {styles.mealName}>{props.meal.title}</Text>
                     <Text>N{props.meal.price}</Text>
-                    <Text style = {styles.mealTime}>4M</Text>
+                    <Text style = {styles.mealQty}>Qty: {props.quantity}</Text>
                 </View>
                 <View style = {styles.iconsContainer}>
                     <View style = {styles.icons}>
@@ -29,7 +29,6 @@ const CartItem = props => {
                     </View>
                 </View>
             </TouchableOpacity>
-            
         </Card>
     )
 }
@@ -55,7 +54,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginBottom: 7
     },
-    mealTime: {
+    mealQty: {
         marginTop: 'auto',
         fontWeight: '500',
         color: '#0A3D15',

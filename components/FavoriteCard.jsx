@@ -31,7 +31,7 @@ const FavoriteCard = props =>{
                 <View>
                     <Text style = {styles.mealName}>{props.meal.title}</Text>
                     <Text>N{props.meal.price}</Text>
-                    <Text style = {styles.mealTime}>4M</Text>
+                    <Text style = {styles.mealTime}>{Math.round(props.meal.readyTime/60)}M</Text>
                 </View>
                 <View style = {styles.iconsContainer}>
                     <View style = {styles.icons}>

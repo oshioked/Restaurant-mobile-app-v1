@@ -1,56 +1,97 @@
-import React from 'react';
-import { View, Text, Image, StyleSheet, ScrollView, Switch} from 'react-native';
+import React, { useCallback, useEffect } from 'react';
+import { View, Text, TouchableOpacity, Image, StyleSheet, ScrollView} from 'react-native';
 import colors from '../../constants/colors';
-import { HeaderButtons, Item } from 'react-navigation-header-buttons';
-import CustomHeaderButton from '../../components/CustomHeaderButton';
 import ProfileInfoSet from '../../components/ProfileInfoSet';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import {Ionicons} from '@expo/vector-icons';
+import CompleteYourProfileSection from '../../components/CompleteYourProfileSection';
+import {HeaderButtons, Item} from 'react-navigation-header-buttons';
+import CustomHeaderButton from '../../components/CustomHeaderButton'
+import { logOut } from '../../Redux/user/user.actions';
 
 const ProfileScreen = props =>{
-    const orderNumber = useSelector(state => state.order.orders.filter(order => order.status.toLowerCase() === 'pending').length);
+    const userData = useSelector(state => state.user);
+    const {orders} = userData;
+    const dispatch = useDispatch();
 
+    // Calculate number of pending orders
+    let orderNumber;
+    if(orders){
+        orderNumber = orders.filter(order => order.status.toLowerCase() === 'pending').length;
+    }
+
+    const onLogout = useCallback(() =>{
+        dispatch(logOut());
+        props.navigation.navigate("Auth")
+    }, [dispatch, logOut])
+
+    useEffect(()=>{
+        props.navigation.setParams({onLogout: onLogout})
+    }, [onLogout])
     const onOrderPressHandler = () =>{
         props.navigation.navigate('Order')
     }
+
     return(
         <View style = {styles.screen}>
         <ScrollView contentContainerStyle = {styles.contentContainer}>
 
-            <Image style = {styles.profilePicture} source = {require('../../assets/images/profilePicture.png')}/>
-            <Text style = {styles.fullName}>Daniel Oshioke Iyogwoya</Text>
+            <View style = {styles.profilePictureContainer}>
+                {
+                    userData.imageUri?
+                    <Image style = {styles.profilePicture} source = {require('../../assets/images/profilePicture.png')}/>
+                    : <Ionicons name="md-person" size={70} color = 'grey'/>
+                }
+                
+                
+            </View>
+            
+            <Text style = {styles.fullName}>{userData.name}</Text>
 
             {/* Progress section */}
             <View style = {styles.progressBar}>
-                <View style = {styles.progressIndicator}/>
+                <View style = {{...styles.progressIndicator, width: `${userData.bonusPercentage * 100}%`}}/>
             </View>
             <Text style = {styles.progressComment}>
-                <Text style = {{color : '#4D9654'}}>{'N3 000 of N10 000. '}</Text>
-                Spend extra N 7 000 to qualify for a free N 1200 meal.
+                <Text style = {{color : '#4D9654'}}>{`N${Math.round(userData.bonusPercentage * 10000)} of N10000. `}</Text>
+                {
+                    userData.bonusPercentage >= 1 ? 
+                    'Congrats! You qualify for a N1200 meal discount!'
+                    : (`Spend extra N ${10000 - (userData.bonusPercentage * 10000)} to qualify for a free N 1200 meal discount.`)
+                }
             </Text>
             
             <View style = {styles.infoSection}>
 
                 {/* The order section */}
                 <TouchableOpacity activeOpacity = {0.8} onPress = {onOrderPressHandler} style = {styles.ordersInfo}>
-                <View style = {{...styles.infoSet}}>
-                    
-                        <Text style = {{...styles.infoProp, ...styles.orderLabel}}>Orders</Text>
-                        <View style = {styles.orderIconContainer}>
-                            <View style = {styles.orderIcon}>
-                                <Text style = {styles.orderNumber}>{orderNumber}</Text>
+                    <View style = {{...styles.infoSet, borderBottomWidth: 0, borderTopWidth: 1}}>
+                        
+                            <Text style = {{...styles.infoProp, ...styles.orderLabel}}>Orders</Text>
+                            <View style = {styles.orderIconContainer}>
+                                <View style = {styles.orderIcon}>
+                                    <Text style = {styles.orderNumber}>{orderNumber}</Text>
+                                </View>
                             </View>
-                        </View>
-                </View>    
-                    </TouchableOpacity>
+                    </View>    
+                </TouchableOpacity>
                 
+                {/* Complete profile section */}
+                <CompleteYourProfileSection
+                    address = {userData.address}
+                    imageUri = {userData.imageUri}
+                />
 
                 {/* Profile Info section */}
                 <Text style = {styles.infoSectionTitle}>PROFILE INFO.</Text>
-                <ProfileInfoSet label = "Phone" value = '08056055305'/>
-                <ProfileInfoSet label = "Email" value = 'Danieloshos3@gmail.com'/>
-                <ProfileInfoSet label = "Address" value = 'No 8, Lucky Dube Street, New Havens, California, U.S.A'/>
-                <ProfileInfoSet label = "City/State" value = 'Warri/Delta State'/>
+                <ProfileInfoSet label = "Phone" value = {"0" + userData.phoneNo}/>
+                <ProfileInfoSet label = "Email" value = {userData.email}/>
+                {
+                    userData.address ?
+                    <ProfileInfoSet label = "Address" value = {userData.address}/>
+                    : null
+                }
+                
             </View>
         </ScrollView>
         </View>
@@ -58,17 +99,15 @@ const ProfileScreen = props =>{
 }
 
 ProfileScreen.navigationOptions = navData =>{
-    const onEditPressHandler = () =>{
-        navData.navigation.navigate('ProfileEdit')
-    }
+    const onLogout = navData.navigation.getParam("onLogout")
     return({
         headerTitle: 'Your Profile',
         headerRight: () =>(
             <HeaderButtons HeaderButtonComponent = {CustomHeaderButton}>
                 <Item 
-                    iconName = 'md-create'
-                    title = 'Edit'
-                    onPress = {onEditPressHandler}
+                    iconName = 'md-exit'
+                    title = 'Logout'
+                    onPress = {onLogout}
                 />
             </HeaderButtons>
         )
@@ -84,11 +123,21 @@ const styles = StyleSheet.create({
         paddingTop: 30,
         backgroundColor: 'white'
     },
-    profilePicture: {
-        height: 100,
+    profilePictureContainer: {
         width: 100,
+        height: 100,
         borderRadius: 50,
-        marginVertical: 20
+        marginVertical: 20,
+        overflow: 'hidden',
+        borderWidth: 1,
+        borderColor: '#c7c7c7',
+        justifyContent: 'center',
+        alignItems: 'center'
+
+    },
+    profilePicture: {
+        height: '100%',
+        width: '100%',
     },
     fullName: {
         fontSize: 20,
@@ -117,7 +166,7 @@ const styles = StyleSheet.create({
     
     infoSet: {
         width: '100%',
-        borderBottomColor: colors.primaryShade2,
+        borderColor: colors.primaryShade1,
         borderBottomWidth: 1,
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -130,14 +179,16 @@ const styles = StyleSheet.create({
         fontSize: 14
     },
     infoSection: {
-        alignItems: 'flex-start',
+        alignItems: 'center',
+        
         width: '90%',
         marginTop: 50
     },
     infoSectionTitle: {
         opacity: 0.4, 
         fontSize: 12,
-        marginTop: 50
+        marginTop: 30,
+        width: '100%',
     },
     orderIcon: {
         width: 20,
