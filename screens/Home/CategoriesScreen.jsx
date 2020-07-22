@@ -22,7 +22,7 @@ const CategoriesScreen = props =>{
         try {
             await dispatch(fetchUserData())
         } catch (error) {
-            // console.log(error)
+            console.log(error.message)
         }
     }, [dispatch]);
 

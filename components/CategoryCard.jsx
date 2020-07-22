@@ -15,7 +15,7 @@ const CategoryCard = props =>{
     return(
             <TouchableOpacity activeOpacity = {0.85} style = {{...styles.categoryCard, ...props.style}} onPress = {onCategoryPressHandler}>
                  <Card>
-                <ImageBackground style = {styles.imgBg} source = {require('../dummyData/images/breakfasts.jpg')}>
+                <ImageBackground style = {styles.imgBg} source = {{uri: category.imageurl}}>
                     <ImageDarkener/>
                     <View style = {styles.detailsBlock}>
                         <Text  style = {styles.blockTitle}>{category.title}</Text>

@@ -4,7 +4,7 @@ export const categoriesTypes = {
 
 export const fetchAllCategories = ()=> async (dispatch)=>{
     try {
-        const response = await fetch('http://localhost:5000/categories');
+        const response = await fetch('https://first-food-delivery-rn-app.herokuapp.com/categories');
         const data = await response.json();
 
         dispatch({

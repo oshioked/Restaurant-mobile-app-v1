@@ -3,10 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import CustomButton from './CustomButton';
 import {Ionicons} from '@expo/vector-icons';
 
-// const iconsNames = {
-//     location: ios-pin,
-//     image: ios-camera
-// }
+
 const ProfileCompletionCard = (props) =>{
     return(
         <View style = {styles.card}>
@@ -24,7 +21,7 @@ const ProfileCompletionCard = (props) =>{
                 !props.isCompleted ?
                 <CustomButton onPress = {props.onPress} style = {styles.button} textStyle>{props.buttonText}</CustomButton>
                 : 
-                <CustomButton style = {{...styles.button, borderColor: '#c7c7c7', borderWidth: 1, backgroundColor: 'white' }}  textStyle = {{...styles.buttonText, color: 'black'}}>{props.onCompletedButtonText}</CustomButton>
+                <CustomButton onPress = {props.onPress} style = {{...styles.button, borderColor: '#c7c7c7', borderWidth: 1, backgroundColor: 'white' }}  textStyle = {{...styles.buttonText, color: 'black'}}>{props.onCompletedButtonText}</CustomButton>
             }
            
         </View>

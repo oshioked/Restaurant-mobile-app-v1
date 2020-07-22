@@ -10,11 +10,12 @@ import { addOrder } from '../../Redux/user/user.actions';
 const CartScreen = props =>{
     const cartItems = useSelector(state => state.cart.items);
     const totalAmount = useSelector(state => state.cart.totalAmount);
+    const userBonusPercent = useSelector(state => state.user.bonusPercentage)
+
     let totalTime;
     if(cartItems.length){
         totalTime = cartItems.map(item => item.meal.readyTime).reduce((a, b) => a + b);
     }
-    const userBonusPercent = useSelector(state => state.user.bonusPercentage)
     
     useEffect(()=>{
         props.navigation.setParams({
@@ -27,6 +28,7 @@ const CartScreen = props =>{
     const placeOrderHandler = useCallback(() =>{
         dispatch(addOrder(cartItems, totalAmount))
     }, [cartItems, totalAmount, dispatch, addOrder]);
+
 
     useEffect(()=>{
         props.navigation.setParams({
@@ -48,8 +50,7 @@ const CartScreen = props =>{
                 }
                 </Text>
             </View>
-            <View style = {styles.orderDetailsBlock}>
-                
+            <View style = {styles.cartDetailsBlock}>
                 <View style = {styles.totalAmountBar}>
                     <Text style = {styles.amountLabel} >Total Amount:</Text>
                     <Text style = {styles.amount}>N{totalAmount}</Text>
@@ -61,26 +62,26 @@ const CartScreen = props =>{
             </View>
         </View>
     )
+
     return(
-            cartItems.length ?
-            <FlatList
-                style = {{backgroundColor: 'white'}}
-                data = {cartItems}
-                keyExtractor = {item => (item.meal.id).toString()}
-                ListHeaderComponent = {headerComponent}
-                renderItem = {itemData =>(
-                    <CartItem
-                        meal = {itemData.item.meal}
-                        quantity = {itemData.item.quantity}
-                    />
-                )}
-            />
-            : 
-            <View style = {styles.emptyFavContainer}>
-                <Image resizeMode = 'contain' resizeMethod = "scale" style = {styles.emptyFavImage} source = {require('../../assets/images/emptyBag.png')} />
-                <Text style  = {styles.emptyFavText}>You currently have no meals in your bag</Text>
-            </View>
-        
+        cartItems.length ?
+        <FlatList
+            style = {{backgroundColor: 'white'}}
+            data = {cartItems}
+            keyExtractor = {item => (item.meal.id).toString()}
+            ListHeaderComponent = {headerComponent}
+            renderItem = {itemData =>(
+                <CartItem
+                    meal = {itemData.item.meal}
+                    quantity = {itemData.item.quantity}
+                />
+            )}
+        />
+        : 
+        <View style = {styles.emptyFavContainer}>
+            <Image resizeMode = 'contain' resizeMethod = "scale" style = {styles.emptyFavImage} source = {require('../../assets/images/emptyBag.png')} />
+            <Text style  = {styles.emptyFavText}>You currently have no meals in your bag</Text>
+        </View>
     )
 }
 
@@ -121,7 +122,7 @@ const styles = StyleSheet.create({
         fontSize: 12,
         textAlign: 'center'
     },
-    orderDetailsBlock: {
+    cartDetailsBlock: {
         elevation: 6,
         shadowColor: 'grey',
         shadowOffset: {width: 1, height: 1,},
@@ -165,7 +166,8 @@ const styles = StyleSheet.create({
         marginBottom: 5
     },
     emptyFavText: {
-        opacity: 0.5
+        opacity: 0.5,
+        paddingVertical: 15
     }
 })
 

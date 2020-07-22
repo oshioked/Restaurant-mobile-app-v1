@@ -39,6 +39,8 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         marginVertical: 10,
         borderRadius: 10,
+        borderWidth: Platform.OS == "android" ? 1.5 : null,
+        borderColor: colors.primaryShade1,
         padding: 10,
         marginHorizontal: 15,
         overflow: 'hidden',

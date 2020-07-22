@@ -6,6 +6,7 @@ const initialState = {
     id: '',
     name: '',
     email: '',
+    profileImage: '',
     phoneNo: '',
     bonusPercentage: 0,
     address: '',
@@ -38,6 +39,7 @@ const userReducer = (state = initialState, action) =>{
                 id: userData.userid,
                 name: userData.fullname,
                 email: userData.email,
+                profileImage: userData.profileImage,
                 phoneNo: userData.phonenumber,
                 bonusPercentage: userData.bonusprogress,
                 address: userData.address,
@@ -52,6 +54,7 @@ const userReducer = (state = initialState, action) =>{
                 id: newUserData.userid,
                 name: newUserData.fullname,
                 email: newUserData.email,
+                profileImage: newUserData.profileImage,
                 phoneNo: newUserData.phonenumber,
                 bonusPercentage: newUserData.bonusprogress,
                 address: newUserData.address,
@@ -62,6 +65,19 @@ const userReducer = (state = initialState, action) =>{
         case authTypes.LOGOUT_USER:
             return(null)
 
+        case userTypes.SAVE_ADDRESS:
+            const address = action.payload;
+            return({
+                ...state,
+                address
+            })
+
+        case userTypes.SAVE_IMAGE:
+            const imageUrl = action.payload;
+            return({
+                ...state,
+                profileImage: imageUrl
+            })
         case userTypes.FETCH_USER_DATA:
             const data = action.payload;
             return({
@@ -69,6 +85,7 @@ const userReducer = (state = initialState, action) =>{
                 id: data.userid,
                 name: data.fullname,
                 email: data.email,
+                profileImage: data.profileImage,
                 phoneNo: data.phonenumber,
                 bonusPercentage: data.bonusprogress,
                 address: data.address,

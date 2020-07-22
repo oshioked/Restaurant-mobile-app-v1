@@ -16,10 +16,10 @@ const AuthIntroScreen = props =>{
             <ImageDarkener opacity = {0.65}/>
             <SafeAreaView  style = {{flex: 1}}>
                 <View style = {styles.screenContentContainer}>
-                    <View style = {styles.textsContainer}>
+                    {/* <View style = {styles.textsContainer}>
                         <Text style = {styles.textTitle}>HELLO</Text>
                         <Text style = {styles.textPara}>Order food at your convinience, and worthy prices  and receive it really fast.</Text>
-                    </View>  
+                    </View>   */}
                     <View style = {styles.buttonContainer}>
                         <CustomButton onPress = {()=>navigateTo('login')} textStyle = {styles.buttonText} style = {styles.loginButton}>Sign In</CustomButton> 
                         <CustomButton onPress = {()=>navigateTo('register')} textStyle = {styles.registerButtonText} style = {styles.registerButton}>Register</CustomButton>  

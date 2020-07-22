@@ -36,7 +36,6 @@ const mealsReducer = (state = initialState, action) =>{
             })
         case mealTypes.FETCH_CAT_MEALS:
             const {categoryMeals, categoryId} = action.payload;
-            console.log(getMeals(categoryMeals))
             state.categoryMeals[categoryId] = getMeals(categoryMeals);
             return({
                 ...state,

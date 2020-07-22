@@ -1,11 +1,20 @@
 import React from 'react';
-import { View, StyleSheet, Text, Image } from 'react-native';
+import { View, StyleSheet, Linking, Text, Image } from 'react-native';
 import Card from './Card';
 import {Ionicons} from '@expo/vector-icons';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
 
 const DeliveryContactCard = props =>{
+    const onCall = async () =>{
+        try {
+            await Linking.openURL(`tel:08056055305`)
+        } catch (error) {
+            console.log(error)
+        }
+        
+    }
     return(
         <Card style = {props.style}>
             <View style = {styles.contentContainer}>
@@ -15,7 +24,10 @@ const DeliveryContactCard = props =>{
                     <Text style = {styles.timeAway}>2 minutes 35 seconds away</Text>
                 </View>
                 <View style = {styles.iconContainer}>
-                    <Ionicons name = 'ios-call' color = '#2BBA42' size = {28} />
+                    <TouchableOpacity onPress = {onCall} activeOpacity = {0.75}>
+                        <Ionicons name = 'ios-call' color = '#2BBA42' size = {28} />
+                    </TouchableOpacity>
+                    
                 </View>
             </View>
         </Card>

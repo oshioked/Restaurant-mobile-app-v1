@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import {View, StyleSheet, Text, ActivityIndicator } from 'react-native';
-import {Input} from 'react-native-elements';
 import CustomButton from './CustomButton';
 import AuthFormTextInput from './AuthFormTextInput';
 import validate from 'validate.js';
 import { Keyboard } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { registerUser } from '../Redux/user/user.actions';
+import colors from '../constants/colors';
 
 
 const RegisterForm = (props) =>{
@@ -198,12 +198,26 @@ const RegisterForm = (props) =>{
                 onBlur = {isFirstTrial ? null:  updateInputErrorMsgs}
                 onSubmitEditing = {() => {Keyboard.dismiss(); updateInputErrorMsgs();}}
             />
-            <CustomButton onPress = {onRegister} style = {styles.registerButton}>
-                {
-                    isLoading? <ActivityIndicator size = "small" color = 'white'/>
-                    : 'Register'
-                }
-            </CustomButton>
+            {
+                Platform.OS === 'android' ? 
+                (
+                    isLoading ? 
+                    <View style = {{...styles.registerButton, marginHorizontal: 10, paddingHorizontal: 45, paddingVertical: 10, backgroundColor: colors.primaryShade2}}><ActivityIndicator size = 'small' color = 'white'/></View>
+                    : <CustomButton onPress = {onRegister} style = {styles.registerButton}>
+                        Register
+                    </CustomButton>
+                )
+                : 
+                (
+                    <CustomButton onPress = {onRegister} style = {styles.registerButton}>
+                        {
+                            isLoading ?
+                            <ActivityIndicator size = 'small' color = 'white'/>
+                            : 'Sign In'
+                        }
+                    </CustomButton>
+                )
+            }
             {
                 (registerError) ? 
                 <Text style = {styles.formError}>{registerError}</Text>            

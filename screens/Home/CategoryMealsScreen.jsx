@@ -6,7 +6,6 @@ import ImageDarkener from '../../components/ImageDarkener';
 import MealItem from '../../components/MealItem';
 import CustomTextInput from '../../components/CustomTextInput';
 import {useSelector, useDispatch} from 'react-redux'
-import FilterModal from '../FilterModal/FilterModal';
 import { fetchCategoryMeals } from '../../Redux/meals/meals.action';
 
 const CategoryMealsScreen = props =>{
@@ -44,13 +43,13 @@ const CategoryMealsScreen = props =>{
         
     }, [fetchMeals])
 
-    const onSearchHandler = (input) =>{
-        if(input.length <= 0) return;
-        fetchMeals(input)
-    }
+    // const onSearchHandler = (input) =>{
+    //     if(input.length <= 0) return;
+    //     fetchMeals(input)
+    // }
 
     const HeaderComponent = () =>(
-        <ImageBackground style = {styles.imgBg} source = {require('../../dummyData/images/Meals.jpg')}>
+        <ImageBackground style = {styles.imgBg} source = {{uri: categoryDetails.imageurl}}>
             <ImageDarkener/>
             <View style = {styles.detailsBlock}>
                 <Text style = {styles.blockTitle}>{categoryDetails.title}</Text>
@@ -58,7 +57,7 @@ const CategoryMealsScreen = props =>{
             </View>
             <CustomTextInput 
                 placeholder = {`Search ${categoryDetails.title}`}
-                onSubmit = {onSearchHandler}
+                // onSubmit = {onSearchHandler}
                 returnKeyLabel = 'Search'
                 style = {styles.CustomTextInput}
             />
@@ -91,7 +90,6 @@ const CategoryMealsScreen = props =>{
                 }
                 ListHeaderComponent = {HeaderComponent}
             />
-            <FilterModal visible = {filterDisplay}/>
         </View>
     )
 }

@@ -22,7 +22,11 @@ const CustomTextInput = props =>{
     }, [inputValue])
 
     const onSubmitHandler = () =>{
-        setInputValue(inputValue)
+        setInputValue(inputValue);
+        if(!props.onSubmit){
+            onCancelPressHandler();
+            return;
+        };
         props.onSubmit(inputValue);
     }
 

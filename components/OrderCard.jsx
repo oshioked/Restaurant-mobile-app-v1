@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Text, StyleSheet, TouchableOpacity, View } from 'react-native';
+import * as Permissions from 'expo-permissions';
 import Card from './Card';
 import CustomButton from './CustomButton';
 
@@ -10,11 +11,23 @@ const OrderCard = props =>{
         setViewAll(!viewAll)
     }
 
-    const onTrackPressHandler = () =>{
+    const verifyPermission = async () =>{
+        const result = await Permissions.askAsync(Permissions.LOCATION);
+        if(result.status != 'granted'){
+            return false;
+        }
+        return true;
+    }
+
+    const onTrackPressHandler = async () =>{
+        const hasPermission = await verifyPermission();
+        if(!hasPermission)return;
         props.navigation.navigate('TrackOrder')
     }
     const orderItems = props.order.items;
     const itemTitleAndQtySet = orderItems.map(item => `${item.meal.title} (${item.quantity})`);
+
+    console.log(orderItems)
     
     return(
         <Card>
@@ -22,7 +35,7 @@ const OrderCard = props =>{
                 <View style = {styles.timeStatusBlock}>
                     <Text style = {styles.orderedDate}>{props.order.readableDate}</Text>
                     <Text style = {styles.orderStatus}>{'Status: '}
-                        <Text style = {{color: 'green'}}>{props.order.status}</Text>
+                        <Text style = {{color: 'green', fontSize: 12}}>{props.order.status.toUpperCase()}</Text>
                     </Text>
                 </View>
                 {
@@ -32,7 +45,7 @@ const OrderCard = props =>{
                             orderItems.map(item=>(
                                 <View key = {item.meal.id} style = {styles.cartItemRow}>
                                     <Text style = {styles.mealText}>{`${item.meal.title} (${item.quantity})`}</Text>
-                                    <Text style = {styles.mealPriceText}>N{item.amount * item.quantity}</Text>
+                                    <Text style = {styles.mealPriceText}>N{item.amount}</Text>
                                 </View>
                             ))
                         }

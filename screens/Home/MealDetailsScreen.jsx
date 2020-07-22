@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Button, Image, ScrollView} from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import CustomHeaderButton from '../../components/CustomHeaderButton';
@@ -7,14 +7,19 @@ import {useSelector, useDispatch} from 'react-redux';
 import { addItem } from '../../Redux/cart/cart.actions';
 import CustomButton from '../../components/CustomButton';
 import { addFavMeal, removeFavMeal } from '../../Redux/user/user.actions';
+import {Ionicons} from '@expo/vector-icons';
 
 const MealDetailsScreen = props =>{
     const meal = props.navigation.getParam('mealDetails');
-    
+    const [addingToCart, setAddingToCart] = useState(false);
     const isFavorite = useSelector(state => state.user.favoriteMeals.find(id => id == meal.id))
     const dispatch = useDispatch();
-    const onAddToCart = (meal) =>{ 
-        dispatch(addItem(meal))
+    const onAddToCart = async (meal) =>{ 
+        setAddingToCart(true);
+        await dispatch(addItem(meal))
+        setTimeout(()=>{
+            setAddingToCart(false)
+        }, 2000);
     }
 
     const toggleFavorite = useCallback(() =>{
@@ -49,7 +54,7 @@ const MealDetailsScreen = props =>{
                     <Text>{meal.description}</Text>
                 </View>
                 <View style = {styles.buttonContainer}>
-                    <CustomButton style = {styles.cartButton} onPress = {()=>onAddToCart(meal)}>ADD TO CART</CustomButton>
+                    <CustomButton useCustomChild style = {styles.cartButton} onPress = {()=>onAddToCart(meal)}>Add to cart</CustomButton>
                 </View>
                 
             </View>
@@ -103,6 +108,9 @@ const styles = StyleSheet.create({
     mealName: {
         fontSize: 18,
         opacity: 1
+    },
+    cartButton: {
+        height: 40
     }
 })
 

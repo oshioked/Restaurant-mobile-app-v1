@@ -39,19 +39,19 @@ const ExploreScreen = props =>{
         ))
     )
     const fetchRecommendedMeals = useCallback(async () =>{
-        const response = await fetch('http://localhost:5000/meals/recommended');
+        const response = await fetch('https://first-food-delivery-rn-app.herokuapp.com/meals/recommended');
         const data = await response.json();
         setRecommendedMeals(getMeals(data));
     }, [setRecommendedMeals])
 
     const fetchQuickestMeals = useCallback(async () =>{
-        const response = await fetch('http://localhost:5000/meals/quickest');
+        const response = await fetch('https://first-food-delivery-rn-app.herokuapp.com/meals/quickest');
         const data = await response.json();
         setQuickestMeals(getMeals(data))
     }, [setQuickestMeals])
 
     const fetchHotCategories = useCallback(async () =>{
-        const response = await fetch('http://localhost:5000/categories/hottest');
+        const response = await fetch('https://first-food-delivery-rn-app.herokuapp.com/categories/hottest');
         const data = await response.json();
         setHottestCategories(data)
     }, [setHottestCategories])

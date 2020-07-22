@@ -6,7 +6,7 @@ export const mealTypes = {
 
 export const fetchMostOrdered = () => async (dispatch) =>{
     try {
-        const response = await fetch('http://localhost:5000/meals/topOrdered');
+        const response = await fetch('https://first-food-delivery-rn-app.herokuapp.com/meals/topOrdered');
         const data = await response.json();
 
         dispatch({
@@ -19,7 +19,7 @@ export const fetchMostOrdered = () => async (dispatch) =>{
 }
 
 export const fetchCategoryMeals = (catId, searchQuery) => async (dispatch) =>{
-    const url = Boolean(searchQuery) ? `http://localhost:5000/meals/category/${catId}?searchQuery=${searchQuery}` : `http://localhost:5000/meals/category/${catId}`
+    const url = Boolean(searchQuery) ? `https://first-food-delivery-rn-app.herokuapp.com/meals/category/${catId}?searchQuery=${searchQuery}` : `https://first-food-delivery-rn-app.herokuapp.com/meals/category/${catId}`
     try {
         const response = await fetch(url);
         const data = await response.json();
@@ -38,7 +38,7 @@ export const fetchCategoryMeals = (catId, searchQuery) => async (dispatch) =>{
 export const fetchUsersFavMeals = () => async (dispatch, getState) =>{
     const state = getState();
     const favMealsIds = state.user.favoriteMeals;
-    const response = await fetch('http://localhost:5000/meals/favMeals', {
+    const response = await fetch('https://first-food-delivery-rn-app.herokuapp.com/meals/favMeals', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

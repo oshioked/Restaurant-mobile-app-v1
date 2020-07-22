@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Platform } from 'react-native';
 import Card from './Card';
 import {Ionicons} from '@expo/vector-icons';
 import colors from '../constants/colors';
@@ -62,6 +62,8 @@ const styles = StyleSheet.create({
         padding: 10,
         marginHorizontal: 15,
         overflow: 'hidden',
+        borderWidth: Platform.OS == "android" ? 1.5 : null,
+        borderColor: colors.primaryShade1,
         minHeight: 95
     },
     image: {

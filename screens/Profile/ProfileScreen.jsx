@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Image, StyleSheet, ScrollView} from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity, Image, StyleSheet, ScrollView, ActivityIndicator} from 'react-native';
 import colors from '../../constants/colors';
 import ProfileInfoSet from '../../components/ProfileInfoSet';
 import { useSelector, useDispatch } from 'react-redux';
@@ -8,9 +8,12 @@ import CompleteYourProfileSection from '../../components/CompleteYourProfileSect
 import {HeaderButtons, Item} from 'react-navigation-header-buttons';
 import CustomHeaderButton from '../../components/CustomHeaderButton'
 import { logOut } from '../../Redux/user/user.actions';
+import ImageDarkener from '../../components/ImageDarkener';
 
 const ProfileScreen = props =>{
     const userData = useSelector(state => state.user);
+    const [isImageUploading, setIsImageUploading] = useState(false);
+
     const {orders} = userData;
     const dispatch = useDispatch();
 
@@ -28,6 +31,7 @@ const ProfileScreen = props =>{
     useEffect(()=>{
         props.navigation.setParams({onLogout: onLogout})
     }, [onLogout])
+
     const onOrderPressHandler = () =>{
         props.navigation.navigate('Order')
     }
@@ -38,8 +42,15 @@ const ProfileScreen = props =>{
 
             <View style = {styles.profilePictureContainer}>
                 {
-                    userData.imageUri?
-                    <Image style = {styles.profilePicture} source = {require('../../assets/images/profilePicture.png')}/>
+                    isImageUploading ?
+                    <View style  = {{flex: 1, width: '100%', justifyContent: 'center'}}>
+                        <ImageDarkener/>
+                        <ActivityIndicator size = 'small' color = 'white'/>
+                    </View>
+                    :
+                    userData.profileImage
+                    ?
+                    <Image style = {styles.profilePicture} source = {{uri: userData.profileImage}}/>
                     : <Ionicons name="md-person" size={70} color = 'grey'/>
                 }
                 
@@ -78,8 +89,10 @@ const ProfileScreen = props =>{
                 
                 {/* Complete profile section */}
                 <CompleteYourProfileSection
+                    setIsImageUploading = {setIsImageUploading}
                     address = {userData.address}
-                    imageUri = {userData.imageUri}
+                    imageUri = {userData.profileImage}
+                    navigation = {props.navigation}
                 />
 
                 {/* Profile Info section */}

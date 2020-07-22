@@ -5,6 +5,8 @@ import AuthFormTextInput from './AuthFormTextInput';
 import validate from 'validate.js';
 import { useDispatch } from 'react-redux';
 import { logIn } from '../Redux/user/user.actions';
+import { Platform } from 'react-native';
+import colors from '../constants/colors';
 
 
 const SignInForm = (props) =>{
@@ -109,12 +111,28 @@ const SignInForm = (props) =>{
                 leftIcon={{ type: 'ion-icons', name: 'lock-outline'}}
                 onSubmitEditing = {() => {Keyboard.dismiss(); updateInputErrorMsgs();}}
             />
-            <CustomButton onPress = {onSignIn} style = {styles.registerButton}>
-                {
-                    isLoading ? <ActivityIndicator size = 'small' color = 'white'/>
-                    : 'Sign In'
-                }
-            </CustomButton>
+            {
+                Platform.OS === 'android' ? 
+                (
+                    isLoading ? 
+                    <View style = {{...styles.registerButton, marginHorizontal: 10, paddingHorizontal: 40, paddingVertical: 10, backgroundColor: colors.primaryShade2}}><ActivityIndicator size = 'small' color = 'white'/></View>
+                    : <CustomButton onPress = {onSignIn} style = {styles.registerButton}>
+                        Sign in
+                    </CustomButton>
+                )
+                : 
+                (
+                    <CustomButton onPress = {onSignIn} style = {styles.registerButton}>
+                        {
+                            isLoading ?
+                            <ActivityIndicator size = 'small' color = 'white'/>
+                            : 'Sign In'
+                        }
+                    </CustomButton>
+                )
+            }
+            
+            
             {
                 signInError ?
                 <Text style = {styles.formError}>

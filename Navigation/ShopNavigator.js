@@ -18,6 +18,7 @@ import TrackOrderScreen from '../screens/Orders/TrackOrderScreen';
 import AuthIntroScreen from '../screens/Auth/AuthIntroScreen';
 import AuthMainScreen from '../screens/Auth/AuthMainScreen';
 import StartUpScreen from '../screens/StartUpScreen';
+import GetLocationMapScreen from '../screens/Profile/GetLocationMapScreen';
 
 const defaultStackNavOptions = {
     headerTitleAlign: 'center',
@@ -77,7 +78,8 @@ const FavoritesNavigator = createStackNavigator({
 const ProfileNavigator = createStackNavigator({
     Profile: ProfileScreen,
     Order: OrdersOverviewScreen,
-    TrackOrder: TrackOrderScreen
+    TrackOrder: TrackOrderScreen,
+    Location: GetLocationMapScreen
 },{
     defaultNavigationOptions: defaultStackNavOptions,
     navigationOptions: {

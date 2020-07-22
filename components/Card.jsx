@@ -11,7 +11,7 @@ const Card = props=>{
 
 const styles = StyleSheet.create({
     card: {
-        elevation: 6,
+        elevation: 16,
         shadowColor: 'grey',
         shadowOffset: {width: 2, height: 5,},
         shadowRadius: 10,

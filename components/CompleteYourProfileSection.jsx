@@ -1,11 +1,137 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Dimensions } from 'react-native';
 import ProfileCompletionCard from './ProfileCompletionCard';
+import * as Permissions from 'expo-permissions';
+import * as ImagePicker from 'expo-image-picker';
+import * as Location from 'expo-location';
+import { onImageUploadHandler } from '../firebase';
+import { useSelector, useDispatch } from 'react-redux';
+import { saveUserImage } from '../Redux/user/user.actions';
+import { Alert } from 'react-native';
 
 const CompleteYourProfileSection = (props) => {
     const {address, imageUri} = props;
     const isAddressCompleted = Boolean(address) ? 1 : 0;
     const isImageCompleted = Boolean(imageUri) ? 1 : 0;
+    const userId = useSelector(state => state.user.id);
+    const [location, setLocation] = useState({
+        lat: null,
+        lng: null
+    });
+    const dispatch = useDispatch();
+
+
+
+
+    const verifyLocationPermission = async () =>{
+        const result = await Permissions.askAsync(Permissions.LOCATION);
+        if(result.status != 'granted'){
+            Alert.alert(
+                'Insufficient permission',
+                'Grant location permission to use this feature',
+                [
+                    {
+                        text: 'Okay'
+                    }
+                ]
+            )
+            return false;
+        }
+        return true;
+    }
+
+    const pickLocationHandler = async () =>{
+        const hasPermission = await verifyLocationPermission();
+        if(!hasPermission){
+            return;
+        }
+
+        const location = await Location.getCurrentPositionAsync();
+        setLocation({
+            lat: location.coords.latitude,
+            lng: location.coords.longitutde
+        })
+
+        props.navigation.navigate("Location", {
+            userLocation: {
+                lat: location.coords.latitude,
+                lng: location.coords.longitude
+            }
+        });
+    }
+
+    const verifyCameraPermission = async () =>{
+        const result = await Permissions.askAsync(Permissions.CAMERA, Permissions.CAMERA_ROLL);
+        if(result.status != 'granted'){
+            Alert.alert(
+                'Insufficient permission',
+                'Grant camera permission to use this feature',
+                [
+                    {
+                        text: 'Okay'
+                    }
+                ]
+            )
+            return false;
+        }
+        return true;
+    }
+
+    const openCameraHandler = async () =>{
+        const image = await ImagePicker.launchCameraAsync({
+            allowsEditing: true,
+            aspect: [4, 2],
+            quality: 0.0000000001
+        })
+        await uploadSelectedImageToFirebase(image)
+    }
+
+    const openLibraryHandler = async () =>{
+        const image = await ImagePicker.launchImageLibraryAsync({
+            allowsEditing: true,
+            aspect: [4, 2],
+            quality: 0.0000000001
+        })
+        await uploadSelectedImageToFirebase(image)
+    }
+
+    const uploadSelectedImageToFirebase = async (image) =>{
+        if(image.cancelled)return;
+        props.setIsImageUploading(true);
+        const imageUrl = await onImageUploadHandler(image.uri, userId);
+        props.setIsImageUploading(false);
+        dispatch(saveUserImage(imageUrl))
+    }
+
+    const takeImageHandler = async () =>{
+        const hasPermission = await verifyCameraPermission();
+        
+        if(!hasPermission){
+            return
+        }
+
+        await Alert.alert(
+            "Choose method", 
+            "Pick an option to get image",
+            [
+                {
+                    text: 'Take picture',
+                    onPress: openCameraHandler
+                },
+                {
+                    text: 'Pick from your unholy library',
+                    onPress: openLibraryHandler
+                },
+                {
+                    text: 'Cancel'
+                }
+            ]
+        )
+
+
+
+
+    }
 
     return(
         <View style = {{...styles.completeProfileSection, width: Dimensions.get('window').width}}>
@@ -21,7 +147,7 @@ const CompleteYourProfileSection = (props) => {
                         buttonText = "Pick on map"
                         isCompleted = {isAddressCompleted}
                         onCompletedButtonText = 'Change location'
-                        onPress = {()=>{}}
+                        onPress = {pickLocationHandler}
                     />
                     <ProfileCompletionCard
                         iconName = "ios-camera"
@@ -29,7 +155,7 @@ const CompleteYourProfileSection = (props) => {
                         buttonText = "Add image"
                         isCompleted = {isImageCompleted}
                         onCompletedButtonText = 'Change image'
-                        onPress = {()=>{}}
+                        onPress = {takeImageHandler}
                     />
                     <ProfileCompletionCard
                         iconName = "ios-card"

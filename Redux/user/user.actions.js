@@ -14,14 +14,13 @@ const saveUserToStorage = async (data) =>{
 
 const removeUserFromStorage = async () =>{
     await AsyncStorage.removeItem('userInfo');
-    console.log('user removed')
 }
 
 
 // LOG IN ACTION
 export const logIn = ({email, password}) => async (dispatch) =>{
     try {
-        const response = await fetch('http://localhost:5000/api/user/login', {
+        const response = await fetch('https://first-food-delivery-rn-app.herokuapp.com/api/user/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -41,7 +40,6 @@ export const logIn = ({email, password}) => async (dispatch) =>{
         await saveUserToStorage(data);
         
     } catch (error) {
-        console.log(error)
         throw error;
     }
 }
@@ -49,7 +47,7 @@ export const logIn = ({email, password}) => async (dispatch) =>{
 // REGISTER ACTION
 export const registerUser = ({fullName, email, phoneNumber, password}) => async (dispatch) =>{
     try {
-        const response = await fetch('http://localhost:5000/api/user/register', {
+        const response = await fetch('https://first-food-delivery-rn-app.herokuapp.com/api/user/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -87,14 +85,70 @@ export const userTypes = {
     FETCH_USER_DATA: 'FETCH_USER_DATA',
     REMOVE_FAV_MEAL: 'REMOVE_FAV_MEAL',
     ADD_FAV_MEAL: 'ADD_FAV_MEAL',
-    ADD_ORDER: 'ADD_ORDER'
+    ADD_ORDER: 'ADD_ORDER',
+    SAVE_ADDRESS: 'SAVE_ADDRESS',
+    SAVE_IMAGE: 'SAVE_IMAGE'
+}
+
+
+// SAVE ADDRESS 
+export const saveUserAddress = (address) => async (dispatch, getState) =>{
+    const userId = getState().user.id;
+    try {
+        const response = await fetch(`https://first-food-delivery-rn-app.herokuapp.com/user/${userId}/address`, {
+            method: 'POST', 
+            headers: {
+                "Content-Type": 'application/json'
+            },
+            body: JSON.stringify({address})
+            
+        })
+        const data = await response.json();
+        dispatch({
+            type: userTypes.SAVE_ADDRESS,
+            payload: data
+        })
+        if(!response.ok){
+            throw new Error(data);
+            return;
+        }
+    } catch (error) {
+        throw error;
+    }
+}
+
+
+// SAVE PROFILE IMAGE
+export const saveUserImage = (imageUrl) => async (dispatch, getState) => {
+    const userId = getState().user.id;
+    try {
+        const response = await fetch(`https://first-food-delivery-rn-app.herokuapp.com/user/${userId}/image`, {
+            method: 'POST', 
+            headers: {
+                "Content-Type": 'application/json'
+            },
+            body: JSON.stringify({imageUrl})
+        })
+
+        const data = await response.json();
+        if(!response.ok){
+            throw new Error(data);
+            return;
+        }
+        dispatch({
+            type: userTypes.SAVE_IMAGE,
+            payload: data //the address is returned back from the server.
+        })
+    } catch (error) {
+        throw error;
+    }
 }
 
 // GET USER DATA
 export const fetchUserData = () => async (dispatch, getState) =>{
     const userId = getState().user.id;
     try {
-        const response = await fetch(`http://localhost:5000/user/${userId}`); 
+        const response = await fetch(`https://first-food-delivery-rn-app.herokuapp.com/user/${userId}`); 
         const data = await response.json();
         if(!response.ok){
             throw new Error(data)
@@ -117,7 +171,7 @@ export const removeFavMeal = (meal) => async (dispatch, getState) =>{
             type: userTypes.REMOVE_FAV_MEAL,
             payload: meal
         })
-        const response = await fetch(`http://localhost:5000/user/${userId}/favMeals`, {
+        const response = await fetch(`https://first-food-delivery-rn-app.herokuapp.com/user/${userId}/favMeals`, {
             method: 'DELETE', 
             headers: {
                 'Content-Type': 'application/json'
@@ -145,7 +199,7 @@ export const addFavMeal = (meal) => async (dispatch, getState) =>{
             type: userTypes.ADD_FAV_MEAL,
             payload: meal
         })
-        const response = await fetch(`http://localhost:5000/user/${userId}/favMeals`, {
+        const response = await fetch(`https://first-food-delivery-rn-app.herokuapp.com/user/${userId}/favMeals`, {
             method: 'POST', 
             headers: {
                 'Content-Type': 'application/json'
@@ -168,7 +222,7 @@ export const addFavMeal = (meal) => async (dispatch, getState) =>{
 export const addOrder = (cartItems, totalAmount) => async (dispatch, getState) => {
     const userId = getState().user.id;
     try {
-        const response = await fetch(`http://localhost:5000/user/${userId}/orders`, {
+        const response = await fetch(`https://first-food-delivery-rn-app.herokuapp.com/user/${userId}/orders`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -195,6 +249,8 @@ export const addOrder = (cartItems, totalAmount) => async (dispatch, getState) =
         throw error;
     }
 }
+
+
 
 
 

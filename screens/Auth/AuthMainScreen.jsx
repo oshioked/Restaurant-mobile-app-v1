@@ -1,4 +1,4 @@
-import { View, StyleSheet, Text, Image, ImageBackground, Easing, Animated,  TouchableOpacity, KeyboardAvoidingView, Platform, Dimensions} from 'react-native';
+import { View, StyleSheet, Text, Image, Easing, Animated,  TouchableOpacity, KeyboardAvoidingView, Platform, Dimensions} from 'react-native';
 import React, { useState, useRef, useEffect, useCallback } from 'react'
 import {LinearGradient} from 'expo-linear-gradient';
 import { ScrollView } from 'react-native-gesture-handler';
