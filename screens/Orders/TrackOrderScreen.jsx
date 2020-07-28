@@ -30,7 +30,6 @@ const TrackOrderScreen = props =>{
             const {coords} = await Location.getCurrentPositionAsync();
             setMapRegion({latitude: coords.latitude, longitude: coords.longitude});
         } catch (error) {
-            console.log(error)
         }
     }, [setMapRegion])
 
@@ -38,7 +37,6 @@ const TrackOrderScreen = props =>{
     const getRouteCoords = useCallback(async () =>{
         const mealCoordinates = `${mealLocation.longitude},${mealLocation.latitude}`;
         const buyerCoordinates = `${mapRegion.longitude},${mapRegion.latitude}`
-        console.log(mealCoordinates, buyerCoordinates);
         try {
             const response = await fetch(`https://api.mapbox.com/directions/v5/mapbox/cycling/${mealCoordinates};${buyerCoordinates}?access_token=pk.eyJ1IjoiZGFuaWVsb3Nob3MiLCJhIjoiY2tibXd0MmZhMDFnODJ3cG5scTFiZmE2byJ9.700eqknNYDEvWmvfWQsIWQ`)
             const data = await response.json();
@@ -49,14 +47,13 @@ const TrackOrderScreen = props =>{
             }))
             setRouteCoordinates(routeCoords); 
         } catch (error) {
-            console.log(error)
+
         }
 
     }, [mealLocation, mapRegion])
 
     useEffect(()=>{
         if(!mapRegion.latitude)return;
-        console.log(mapRegion, 'mapREgion')
         getRouteCoords();
     }, [mapRegion])
 
@@ -67,7 +64,6 @@ const TrackOrderScreen = props =>{
         getUserLocAndRoute()
     }, [getUserLocation, ])    
 
-    // console.log(routeCoordinates, 'aksfjlkd')
 
 
 

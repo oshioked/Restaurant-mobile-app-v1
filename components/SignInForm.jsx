@@ -77,7 +77,6 @@ const SignInForm = (props) =>{
                 await dispatch(logIn({email: email.value, password: password.value}));
                 props.navigation.navigate('Shop');
             } catch (error) {
-                console.log(error, 'login')
                 setSignInError(error.message)
             }
            setIsLoading(false);

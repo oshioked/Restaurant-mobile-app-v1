@@ -20,7 +20,6 @@ const firebaseConfig = {
         resolve(xhr.response);
       };
       xhr.onerror = (e) => {
-        console.log(e);
         reject(new TypeError('Network request failed'));
       };
       xhr.responseType = 'blob';

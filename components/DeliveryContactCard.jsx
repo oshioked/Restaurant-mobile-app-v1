@@ -11,7 +11,7 @@ const DeliveryContactCard = props =>{
         try {
             await Linking.openURL(`tel:08056055305`)
         } catch (error) {
-            console.log(error)
+            
         }
         
     }

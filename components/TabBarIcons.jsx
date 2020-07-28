@@ -25,7 +25,6 @@ export const CartTabIcon = ({tintColor}) =>{
 }
 
 export const OrderTabIcon = ({style, iconColor, tintColor}) =>{
-    console.log(iconColor)
     return(
         <MaterialCommunityIcons style = {style}  name="truck-fast" size={27} color = {iconColor? iconColor : tintColor}/>
     )

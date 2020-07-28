@@ -27,7 +27,6 @@ const OrderCard = props =>{
     const orderItems = props.order.items;
     const itemTitleAndQtySet = orderItems.map(item => `${item.meal.title} (${item.quantity})`);
 
-    console.log(orderItems)
     
     return(
         <Card>
