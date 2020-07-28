@@ -4,6 +4,7 @@ import CategoryCard from '../../components/CategoryCard';
 import colors from '../../constants/colors';
 import MealsSlide from '../../components/MealsSlide';
 import Meal from '../../models/Meal';
+import LoadingMealSlideElements from '../../components/LoadingMealSlideElement';
 
 const ExploreScreen = props =>{
    const [isLoading, setIsLoading] = useState(false)
@@ -38,6 +39,8 @@ const ExploreScreen = props =>{
             )
         ))
     )
+
+
     const fetchRecommendedMeals = useCallback(async () =>{
         const response = await fetch('https://first-food-delivery-rn-app.herokuapp.com/meals/recommended');
         const data = await response.json();
@@ -72,16 +75,25 @@ const ExploreScreen = props =>{
         fetchAll();
     }, [fetchAll])
 
+
+
     if(isLoading){
         return(
-            <View style = {{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-               <ActivityIndicator size = "large" />
+            <View style = {{flex: 1}}>
+               <View style = {{...styles.mealSetContainer, paddingLeft: 0}}>
+                    <LoadingMealSlideElements/>
+               </View>
+               <View style = {{...styles.mealSetContainer, paddingLeft: 0}}>
+                    <LoadingMealSlideElements/>
+               </View>
+               <View style = {{...styles.sectionTitle, ...styles.loadingElements, minHeight: 24, width: 180}}/>
+                <View style = {{...styles.loadingElements, height: 200, marginHorizontal: 15, borderRadius: 10}}/>
             </View>
         )
     }
 
     return(
-        <ScrollView>
+        <ScrollView style = {styles.screen}>
             
             <View style = {styles.mealSetContainer}>
                 <MealsSlide navigation = {props.navigation} title = 'Recommended Meals' meals = {recommendedMeals}/>
@@ -110,9 +122,13 @@ const ExploreScreen = props =>{
 }
 
 const styles = StyleSheet.create({
+    screen:{
+        flex: 1,
+        backgroundColor: 'white'
+    },
     mealSetContainer: {
         borderBottomColor: colors.primaryShade1,
-        borderBottomWidth: 2,
+        borderBottomWidth: 1,
         paddingBottom:20,
         paddingLeft: 15
     },
@@ -124,7 +140,6 @@ const styles = StyleSheet.create({
         width: 170
     },
     categoryCard: {
-        
         width: '100%',
         height: 210,
     },
@@ -132,6 +147,10 @@ const styles = StyleSheet.create({
         fontSize: 18,
         marginVertical: 20,
         marginLeft: 15
+    },
+    loadingElements:{
+        backgroundColor: 'grey',
+        opacity: 0.1
     }
 })
 
