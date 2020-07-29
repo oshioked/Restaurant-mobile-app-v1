@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { View, Text, StyleSheet} from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator} from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import * as Location from 'expo-location';
 import Polyline from '@mapbox/polyline';
@@ -69,10 +69,10 @@ const TrackOrderScreen = props =>{
 
 
     return(
-        <View style = {{flex: 1}}>
-            {
+            <View style = {{flex: 1, justifyContent: 'center'}}>
+                {
                 mapRegion.latitude ?
-                <View style = {{flex: 1}}>
+                <>
                     <MapView 
                         provider = {PROVIDER_GOOGLE} 
                         showsUserLocation = {true} 
@@ -94,12 +94,13 @@ const TrackOrderScreen = props =>{
                     </MapView>
                     <View style = {styles.contentContainer}>
                         <DeliveryContactCard style = {styles.contactCard}/> 
-                    </View>                    
-                </View>
-                : null
-            }
-
-        </View>
+                    </View>  
+                </>
+                :
+                <ActivityIndicator size = 'large'/>                        
+                }
+                          
+            </View>
         
     )
 }
