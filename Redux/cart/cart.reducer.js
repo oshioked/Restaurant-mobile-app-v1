@@ -41,6 +41,8 @@ const cartReducer = (state = initialState, action) =>{
                 items: state.items.filter(item => item.meal.id != mealToClear.id),
                 totalAmount: state.totalAmount - (mealToClear.price * quantityInCart)
             })
+        case cartTypes.CLEAR_CART:
+            return initialState
         default:
             return state;
     }

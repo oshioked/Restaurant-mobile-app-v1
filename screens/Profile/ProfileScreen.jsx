@@ -9,10 +9,14 @@ import {HeaderButtons, Item} from 'react-navigation-header-buttons';
 import CustomHeaderButton from '../../components/CustomHeaderButton'
 import { logOut } from '../../Redux/user/user.actions';
 import ImageDarkener from '../../components/ImageDarkener';
+import {Overlay} from 'react-native-elements';
+
+
 
 const ProfileScreen = props =>{
     const userData = useSelector(state => state.user);
     const [isImageUploading, setIsImageUploading] = useState(false);
+    const [isLogoutOverlayVisible, setIsLogoutOverlayVisible] = useState(false)
 
     const {orders} = userData;
     const dispatch = useDispatch();
@@ -29,12 +33,33 @@ const ProfileScreen = props =>{
     }, [dispatch, logOut])
 
     useEffect(()=>{
-        props.navigation.setParams({onLogout: onLogout})
+        props.navigation.setParams({setIsLogoutOverlayVisible})
     }, [onLogout])
 
     const onOrderPressHandler = () =>{
         props.navigation.navigate('Order')
     }
+
+    
+    const LogoutConfirmOverlay = () =>{
+        return(
+        <Overlay isVisible = {isLogoutOverlayVisible} overlayStyle = {{alignItems: 'center', padding: 0, borderRadius: 15, width: 230, height: 180}}>
+            <View style = {{alignItems: 'center', justifyContent: 'center', height: '77%', borderBottomWidth: 1, borderColor: colors.primaryShade1, width: '100%'}}>
+                <Text style = {{fontSize: 20, fontWeight: '500', marginBottom: 10}} >Log out</Text>
+                <Text>Are you sure?</Text>
+            </View>
+            <View style = {{flexDirection: 'row', height: '23%', justifyContent: 'space-between', alignItems: 'center', width: '100%'}}>
+                <View style = {{width: '50%', height: '100%', justifyContent: 'center', alignItems: 'center', borderRightWidth: 1.5, borderColor: colors.primaryShade1}}>
+                    <TouchableOpacity onPress = {()=>{setIsLogoutOverlayVisible(false)}}  ><Text style = {{color: 'red'}}>Cancel</Text></TouchableOpacity>
+                </View>
+                <View style = {{width: '50%', alignItems: 'center'}}>
+                    <TouchableOpacity onPress = {onLogout}><Text>Confirm</Text></TouchableOpacity>
+                </View>
+            </View>
+        </Overlay>        
+        )
+    }
+
 
     return(
         <View style = {styles.screen}>
@@ -66,7 +91,7 @@ const ProfileScreen = props =>{
                 {
                     userData.bonusPercentage >= 1 ? 
                     'Congrats! You qualify for a N1200 meal discount!'
-                    : (`Spend extra N ${10000 - (userData.bonusPercentage * 10000)} to qualify for a free N 1200 meal discount.`)
+                    : (`Spend extra N ${10000 - Math.round(userData.bonusPercentage * 10000)} to qualify for a free N 1200 meal discount.`)
                 }
             </Text>
             
@@ -102,15 +127,15 @@ const ProfileScreen = props =>{
                     <ProfileInfoSet label = "Address" value = {userData.address}/>
                     : null
                 }
-                
             </View>
+            <LogoutConfirmOverlay/>
         </ScrollView>
         </View>
     )
 }
 
 ProfileScreen.navigationOptions = navData =>{
-    const onLogout = navData.navigation.getParam("onLogout")
+    const setIsLogoutOverlayVisible = navData.navigation.getParam("setIsLogoutOverlayVisible")
     return({
         headerTitle: 'Your Profile',
         headerRight: () =>(
@@ -118,7 +143,7 @@ ProfileScreen.navigationOptions = navData =>{
                 <Item 
                     iconName = 'md-exit'
                     title = 'Logout'
-                    onPress = {onLogout}
+                    onPress = {()=>{setIsLogoutOverlayVisible(true)}}
                 />
             </HeaderButtons>
         )

@@ -47,6 +47,7 @@ const styles = StyleSheet.create({
     },
     loadingMealsContainer:{
         flexWrap: 'nowrap',
+        marginLeft: 7.5,
         width: 500,
         flexDirection: 'row',
         overflow: 'hidden'
@@ -55,7 +56,7 @@ const styles = StyleSheet.create({
         minWidth: 170,
         width: 170,
         height: 220,
-        paddingHorizontal: 7.5,
+        paddingRight: 7.5,
     },
     loadingMealPhoto:{
         height: '70%'

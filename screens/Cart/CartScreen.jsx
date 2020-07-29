@@ -6,11 +6,17 @@ import colors from '../../constants/colors';
 import CartItem from '../../components/CartItem';
 import { useSelector, useDispatch } from 'react-redux';
 import { addOrder } from '../../Redux/user/user.actions';
+import ActionConfirmModal from '../../components/ActionConfirmModal';
+import { useState } from 'react';
+import { clearCart } from '../../Redux/cart/cart.actions';
 
 const CartScreen = props =>{
     const cartItems = useSelector(state => state.cart.items);
     const totalAmount = useSelector(state => state.cart.totalAmount);
-    const userBonusPercent = useSelector(state => state.user.bonusPercentage)
+    const userBonusPercent = useSelector(state => state.user.bonusPercentage);
+    const [placingOrder, setPlacingOrder] = useState(false);
+    const [orderCompleted, setOrderCompleted] = useState(false);
+    const [errorPlacingOrder, setErrorPlacingOrder] = useState(false)
 
     let totalTime;
     if(cartItems.length){
@@ -25,9 +31,24 @@ const CartScreen = props =>{
 
     const dispatch = useDispatch();
 
-    const placeOrderHandler = useCallback(() =>{
-        dispatch(addOrder(cartItems, totalAmount))
-    }, [cartItems, totalAmount, dispatch, addOrder]);
+    const placeOrderHandler = useCallback( async () =>{
+        setPlacingOrder(true)
+        try {
+            await dispatch(addOrder(cartItems, totalAmount));
+            await dispatch(clearCart())
+            setOrderCompleted(true);
+            setPlacingOrder(false);
+            setTimeout(()=>{
+                setOrderCompleted(false)
+            }, 3000)
+        } catch (error) {
+            setErrorPlacingOrder(true);
+            setPlacingOrder(false);
+            setTimeout(()=>{
+                setErrorPlacingOrder(false)
+            }, 1500)
+        }
+    }, [cartItems, totalAmount, dispatch, setErrorPlacingOrder, setOrderCompleted, setErrorPlacingOrder, addOrder]);
 
 
     useEffect(()=>{
@@ -64,24 +85,31 @@ const CartScreen = props =>{
     )
 
     return(
+        
+    <View style = {{flex: 1}}>
+        <ActionConfirmModal isVisible = {orderCompleted} iconName = 'ios-bicycle' text = "Order Completed" text2 = "Check profile to track all orders" />
+        <ActionConfirmModal loading = {true} isVisible = {placingOrder}/>
+        {
         cartItems.length ?
-        <FlatList
-            style = {{backgroundColor: 'white'}}
-            data = {cartItems}
-            keyExtractor = {item => (item.meal.id).toString()}
-            ListHeaderComponent = {headerComponent}
-            renderItem = {itemData =>(
-                <CartItem
-                    meal = {itemData.item.meal}
-                    quantity = {itemData.item.quantity}
-                />
-            )}
-        />
+            <FlatList
+                style = {{backgroundColor: 'white'}}
+                data = {cartItems}
+                keyExtractor = {item => (item.meal.id).toString()}
+                ListHeaderComponent = {headerComponent}
+                renderItem = {itemData =>(
+                    <CartItem
+                        meal = {itemData.item.meal}
+                        quantity = {itemData.item.quantity}
+                    />
+                )}
+            />
         : 
-        <View style = {styles.emptyFavContainer}>
-            <Image resizeMode = 'contain' resizeMethod = "scale" style = {styles.emptyFavImage} source = {require('../../assets/images/emptyBag.png')} />
-            <Text style  = {styles.emptyFavText}>You currently have no meals in your bag</Text>
-        </View>
+            <View style = {styles.emptyFavContainer}>
+                <Image resizeMode = 'contain' resizeMethod = "scale" style = {styles.emptyFavImage} source = {require('../../assets/images/emptyBag.png')} />
+                <Text style  = {styles.emptyFavText}>You currently have no meals in your bag</Text>
+            </View>   
+        }       
+    </View>
     )
 }
 

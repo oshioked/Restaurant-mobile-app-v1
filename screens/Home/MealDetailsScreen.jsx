@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Button, Image, ScrollView} from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView} from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import CustomHeaderButton from '../../components/CustomHeaderButton';
 import colors from '../../constants/colors';
@@ -7,11 +7,14 @@ import {useSelector, useDispatch} from 'react-redux';
 import { addItem } from '../../Redux/cart/cart.actions';
 import CustomButton from '../../components/CustomButton';
 import { addFavMeal, removeFavMeal } from '../../Redux/user/user.actions';
+import {Overlay} from 'react-native-elements';
 import {Ionicons} from '@expo/vector-icons';
+import ActionConfirmModal from '../../components/ActionConfirmModal';
 
 const MealDetailsScreen = props =>{
     const meal = props.navigation.getParam('mealDetails');
     const [addingToCart, setAddingToCart] = useState(false);
+    
     const isFavorite = useSelector(state => state.user.favoriteMeals.find(id => id == meal.id))
     const dispatch = useDispatch();
     const onAddToCart = async (meal) =>{ 
@@ -19,12 +22,14 @@ const MealDetailsScreen = props =>{
         await dispatch(addItem(meal))
         setTimeout(()=>{
             setAddingToCart(false)
-        }, 2000);
+        }, 1000);
     }
 
     const toggleFavorite = useCallback(() =>{
         if(!isFavorite){
            dispatch(addFavMeal(meal)) 
+
+
         }else{
             dispatch(removeFavMeal(meal))
         }
@@ -35,8 +40,8 @@ const MealDetailsScreen = props =>{
             toggleFavorite,
             isFavorite
         })
-    }, [toggleFavorite, isFavorite])
-    
+    }, [toggleFavorite, isFavorite]);
+
     return(
         <ScrollView style = {{backgroundColor: 'white'}}>
             <Image style = {styles.image} source = {{uri: meal.imageUri}}/>
@@ -58,7 +63,8 @@ const MealDetailsScreen = props =>{
                 </View>
                 
             </View>
-            
+            <ActionConfirmModal isVisible = {addingToCart} iconName = 'ios-basket' text = 'Added to Basket'/>
+
         </ScrollView>
     )
 }
