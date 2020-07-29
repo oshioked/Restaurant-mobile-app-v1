@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, ScrollView, Dimensions } from 'react-native';
 import ProfileCompletionCard from './ProfileCompletionCard';
 import * as Permissions from 'expo-permissions';
 import * as ImagePicker from 'expo-image-picker';
-import * as Location from 'expo-location';
 import { onImageUploadHandler } from '../firebase';
 import { useSelector, useDispatch } from 'react-redux';
 import { saveUserImage } from '../Redux/user/user.actions';
@@ -14,50 +13,11 @@ const CompleteYourProfileSection = (props) => {
     const isAddressCompleted = Boolean(address) ? 1 : 0;
     const isImageCompleted = Boolean(imageUri) ? 1 : 0;
     const userId = useSelector(state => state.user.id);
-    const [location, setLocation] = useState({
-        lat: null,
-        lng: null
-    });
+
     const dispatch = useDispatch();
 
-
-
-
-    const verifyLocationPermission = async () =>{
-        const result = await Permissions.askAsync(Permissions.LOCATION);
-        if(result.status != 'granted'){
-            Alert.alert(
-                'Insufficient permission',
-                'Grant location permission to use this feature',
-                [
-                    {
-                        text: 'Okay'
-                    }
-                ]
-            )
-            return false;
-        }
-        return true;
-    }
-
-    const pickLocationHandler = async () =>{
-        const hasPermission = await verifyLocationPermission();
-        if(!hasPermission){
-            return;
-        }
-
-        const location = await Location.getCurrentPositionAsync();
-        setLocation({
-            lat: location.coords.latitude,
-            lng: location.coords.longitutde
-        })
-
-        props.navigation.navigate("Location", {
-            userLocation: {
-                lat: location.coords.latitude,
-                lng: location.coords.longitude
-            }
-        });
+    const onClickLocation = () =>{
+        props.navigation.navigate("Location");
     }
 
     const verifyCameraPermission = async () =>{
@@ -147,7 +107,7 @@ const CompleteYourProfileSection = (props) => {
                         buttonText = "Pick on map"
                         isCompleted = {isAddressCompleted}
                         onCompletedButtonText = 'Change location'
-                        onPress = {pickLocationHandler}
+                        onPress = {onClickLocation}
                     />
                     <ProfileCompletionCard
                         iconName = "ios-camera"

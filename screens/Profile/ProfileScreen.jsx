@@ -53,8 +53,6 @@ const ProfileScreen = props =>{
                     <Image style = {styles.profilePicture} source = {{uri: userData.profileImage}}/>
                     : <Ionicons name="md-person" size={70} color = 'grey'/>
                 }
-                
-                
             </View>
             
             <Text style = {styles.fullName}>{userData.name}</Text>
