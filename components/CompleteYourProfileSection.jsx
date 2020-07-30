@@ -79,7 +79,7 @@ const CompleteYourProfileSection = (props) => {
                     onPress: openCameraHandler
                 },
                 {
-                    text: 'Pick from your unholy library',
+                    text: 'Select from your library',
                     onPress: openLibraryHandler
                 },
                 {
