@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, ImageBackground, Button } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, ImageBackground, Button, Platform } from 'react-native';
 import ImageDarkener from '../../components/ImageDarkener';
 import { ScrollView } from 'react-native-gesture-handler';
 import CustomButton from '../../components/CustomButton';
@@ -16,10 +16,10 @@ const AuthIntroScreen = props =>{
             <ImageDarkener opacity = {0.65}/>
             <SafeAreaView  style = {{flex: 1}}>
                 <View style = {styles.screenContentContainer}>
-                    {/* <View style = {styles.textsContainer}>
-                        <Text style = {styles.textTitle}>HELLO</Text>
-                        <Text style = {styles.textPara}>Order food at your convinience, and worthy prices  and receive it really fast.</Text>
-                    </View>   */}
+                    <View style = {styles.textsContainer}>
+                        <Text style = {styles.textTitle}>Q U I C K E A T S</Text>
+                        
+                    </View>  
                     <View style = {styles.buttonContainer}>
                         <CustomButton onPress = {()=>navigateTo('login')} textStyle = {styles.buttonText} style = {styles.loginButton}>Sign In</CustomButton> 
                         <CustomButton onPress = {()=>navigateTo('register')} textStyle = {styles.registerButtonText} style = {styles.registerButton}>Register</CustomButton>  
@@ -44,21 +44,15 @@ const styles = StyleSheet.create({
     },
     textsContainer: {
         width: '100%',
-        marginLeft: 20
+        marginTop: 'auto'
     },
     textTitle: {
-        fontWeight: '700',
         fontSize: 30,
         color: 'white',
         marginBottom: 5,
         opacity: 0.75,
-    },
-    textPara: {
-        fontSize: 16,
-        fontWeight: '500',
-        width: '75%',
-        color: 'white',
-        opacity: 0.6,
+        textAlign: 'center',
+        fontFamily: 'Red Rose'
     },
     buttonContainer: {
         width: '100%',
@@ -69,12 +63,14 @@ const styles = StyleSheet.create({
     loginButton: {
         width: '65%',
         marginVertical: 25,
-        borderRadius: 15,
+        borderRadius: 19,
+        paddingVertical: 14,
         textAlign: 'center'
     },
     registerButton: {
         width: '65%',
-        borderRadius: 15,
+        borderRadius: 19,
+        paddingVertical: 14,
         backgroundColor: 'white',
     },
     buttonText: {

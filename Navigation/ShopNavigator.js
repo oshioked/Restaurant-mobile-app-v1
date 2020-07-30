@@ -21,7 +21,6 @@ import StartUpScreen from '../screens/StartUpScreen';
 import GetLocationMapScreen from '../screens/Profile/GetLocationMapScreen';
 
 const defaultStackNavOptions = {
-    headerTitleAlign: 'center',
     headerTintColor: 'black',
     headerStyle: {
         backgroundColor: colors.primaryShade1
