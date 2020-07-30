@@ -13,12 +13,12 @@ const SearchResultScreen = props =>{
     const fetchMeals = useCallback(async () =>{
         try {
             setIsLoading(true);
-            const response = await fetch(`http://localhost:5000/meals?searchQuery=${searchQuery}`);
+            const response = await fetch(`https://first-food-delivery-rn-app.herokuapp.com/meals?searchQuery=${searchQuery}`);
             const meals = await response.json();
             //getMeal function converts the mealsResults from the way the results are to the format accepted in the app.
             setSearchResultMeals(getMeals(meals))
         } catch (error) {
-
+            console.log(error)
         }
         setIsLoading(false)
     }, [setIsLoading, setSearchResultMeals])

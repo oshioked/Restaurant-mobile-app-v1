@@ -42,20 +42,25 @@ const ProfileScreen = props =>{
 
     
     const LogoutConfirmOverlay = () =>{
+        const child = (
+            <>
+                <View style = {{alignItems: 'center', justifyContent: 'center', height: '77%', borderBottomWidth: 1, borderColor: colors.primaryShade1, width: '100%'}}>
+                    <Text style = {{fontSize: 20, fontWeight: '500', marginBottom: 10}} >Log out</Text>
+                    <Text>Are you sure?</Text>
+                </View>
+                <View style = {{flexDirection: 'row', height: '23%', justifyContent: 'space-between', alignItems: 'center', width: '100%'}}>
+                    <View style = {{width: '50%', height: '100%', justifyContent: 'center', alignItems: 'center', borderRightWidth: 1.5, borderColor: colors.primaryShade1}}>
+                        <TouchableOpacity onPress = {()=>{setIsLogoutOverlayVisible(false)}}  ><Text style = {{color: 'red'}}>Cancel</Text></TouchableOpacity>
+                    </View>
+                    <View style = {{width: '50%', alignItems: 'center'}}>
+                        <TouchableOpacity onPress = {onLogout}><Text>Confirm</Text></TouchableOpacity>
+                    </View>
+                </View>
+            </>
+        )
         return(
-        <Overlay isVisible = {isLogoutOverlayVisible} overlayStyle = {{alignItems: 'center', padding: 0, borderRadius: 15, width: 230, height: 180}}>
-            <View style = {{alignItems: 'center', justifyContent: 'center', height: '77%', borderBottomWidth: 1, borderColor: colors.primaryShade1, width: '100%'}}>
-                <Text style = {{fontSize: 20, fontWeight: '500', marginBottom: 10}} >Log out</Text>
-                <Text>Are you sure?</Text>
-            </View>
-            <View style = {{flexDirection: 'row', height: '23%', justifyContent: 'space-between', alignItems: 'center', width: '100%'}}>
-                <View style = {{width: '50%', height: '100%', justifyContent: 'center', alignItems: 'center', borderRightWidth: 1.5, borderColor: colors.primaryShade1}}>
-                    <TouchableOpacity onPress = {()=>{setIsLogoutOverlayVisible(false)}}  ><Text style = {{color: 'red'}}>Cancel</Text></TouchableOpacity>
-                </View>
-                <View style = {{width: '50%', alignItems: 'center'}}>
-                    <TouchableOpacity onPress = {onLogout}><Text>Confirm</Text></TouchableOpacity>
-                </View>
-            </View>
+        <Overlay isVisible = {isLogoutOverlayVisible} children = {child} overlayStyle = {{alignItems: 'center', padding: 0, borderRadius: 15, width: 230, height: 180}}>
+            
         </Overlay>        
         )
     }
