@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "Justeats",
-    "slug": "justeats",
+    "name": "Quickeats",
+    "slug": "quick-eats",
+    "privacy": "public",
     "platforms": [
       "ios",
-      "android",
-      "web"
+      "android"
     ],
     "version": "1.0.0",
     "orientation": "portrait",
@@ -22,7 +22,26 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": false,
+      "bundleIdentifier": "com.oshiokeDaniel.quickeats",
+      "buildNumber": "1.0.0"
+    },
+    "android":{
+      "package": "com.oshiokeDaniel.quickeats",
+      "versionCode": 1,
+      "permissions":[
+        "CAMERA",
+        "ACCESS_FINE_LOCATION"
+      ],
+      "adaptiveIcon": {
+        "foregroundImage":"./assets/icon.png",
+        "backgroundColor": "#AE9B9B"
+      },
+      "config":{
+        "googleMaps":{
+          "apiKey": "AIzaSyCAdjMHVb2eAVb5BngfZLQVufJ9pdWxS_M8"
+        }        
+      }
     }
   }
 }

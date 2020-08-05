@@ -126,11 +126,12 @@ const RegisterForm = (props) =>{
                     phoneNumber: phoneNumber.value,
                     password: password.value
                 }))
+                setIsLoading(false)
                 props.navigation.navigate("Shop");           
             } catch (error) {
+                setIsLoading(false)
                 setRegisterError(error.message)
             }
-            setIsLoading(false)
         }
         
     }

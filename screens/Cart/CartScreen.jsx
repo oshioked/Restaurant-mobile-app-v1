@@ -9,6 +9,11 @@ import { addOrder } from '../../Redux/user/user.actions';
 import ActionConfirmModal from '../../components/ActionConfirmModal';
 import { useState } from 'react';
 import { clearCart } from '../../Redux/cart/cart.actions';
+import * as Notifications from 'expo-notifications';
+import * as Permissions from 'expo-permissions';
+
+
+
 
 const CartScreen = props =>{
     const cartItems = useSelector(state => state.cart.items);
@@ -22,6 +27,32 @@ const CartScreen = props =>{
     if(cartItems.length){
         totalTime = cartItems.map(item => item.meal.readyTime).reduce((a, b) => a + b);
     }
+
+    const verifyPermission = async () =>{
+        const {granted} = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+        if(granted){
+            return true
+        }else{
+            const {granted} = await Permissions.askAsync(Permissions.NOTIFICATIONS)
+            if(granted){
+                return true
+            }else{
+                return false
+            }
+        }
+    }
+    
+    const scheduleNotification = () =>{
+        Notifications.scheduleNotificationAsync({
+            content:{
+                title: "Order Confirmation",
+                body: "Track all your current orders"
+            },
+            trigger:{
+                seconds: 10
+            }
+        })
+    }
     
     useEffect(()=>{
         props.navigation.setParams({
@@ -31,7 +62,10 @@ const CartScreen = props =>{
 
     const dispatch = useDispatch();
 
+
     const placeOrderHandler = useCallback( async () =>{
+        const hasPermission = await verifyPermission();
+        if(hasPermission) await scheduleNotification();
         setPlacingOrder(true)
         try {
             await dispatch(addOrder(cartItems, totalAmount));
@@ -41,6 +75,7 @@ const CartScreen = props =>{
             setTimeout(()=>{
                 setOrderCompleted(false)
             }, 3000)
+            
         } catch (error) {
             setErrorPlacingOrder(true);
             setPlacingOrder(false);
@@ -48,6 +83,7 @@ const CartScreen = props =>{
                 setErrorPlacingOrder(false)
             }, 1500)
         }
+
     }, [cartItems, totalAmount, dispatch, setErrorPlacingOrder, setOrderCompleted, setErrorPlacingOrder, addOrder]);
 
 

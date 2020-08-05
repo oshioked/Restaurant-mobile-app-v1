@@ -108,7 +108,7 @@ const GetLocationMapScreen = props =>{
                <>
                 <MapView 
                     showsMyLocationButton = {true} 
-                    provider = {PROVIDER_GOOGLE} 
+                    // provider = {PROVIDER_GOOGLE} 
                     style = {{flex: 1}} 
                     showsUserLocation = {true} 
                     onPress = {onLocationSelect} 

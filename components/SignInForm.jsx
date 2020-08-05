@@ -75,11 +75,13 @@ const SignInForm = (props) =>{
             setIsLoading(true);
             try {
                 await dispatch(logIn({email: email.value, password: password.value}));
+                setIsLoading(false);
                 props.navigation.navigate('Shop');
             } catch (error) {
+                setIsLoading(false);
                 setSignInError(error.message)
             }
-           setIsLoading(false);
+           
         }
         
     }

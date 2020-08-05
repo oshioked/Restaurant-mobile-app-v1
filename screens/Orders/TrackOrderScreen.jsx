@@ -74,7 +74,7 @@ const TrackOrderScreen = props =>{
                 mapRegion.latitude ?
                 <>
                     <MapView 
-                        provider = {PROVIDER_GOOGLE} 
+                        // provider = {PROVIDER_GOOGLE} 
                         showsUserLocation = {true} 
                         showsMyLocationButton = {true} 
                         style = {styles.mapView} 
