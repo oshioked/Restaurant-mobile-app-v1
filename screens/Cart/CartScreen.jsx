@@ -70,6 +70,9 @@ const CartScreen = props =>{
                 props.navigation.navigate("Order")
             }
         })
+        return(()=>{
+            subscribe.remove()
+        })
     })
     
     useEffect(()=>{
@@ -82,26 +85,25 @@ const CartScreen = props =>{
 
 
     const placeOrderHandler = useCallback( async () =>{
-        const hasPermission = await verifyPermission();
-        if(hasPermission){
-            await scheduleNotification();
-        } 
-        setPlacingOrder(true)
+        setPlacingOrder(true);
         try {
             await dispatch(addOrder(cartItems, totalAmount));
             await dispatch(clearCart())
             setOrderCompleted(true);
             setPlacingOrder(false);
+            const hasPermission = await verifyPermission();
+            if(hasPermission){
+                await scheduleNotification();
+            } 
             setTimeout(()=>{
                 setOrderCompleted(false)
             }, 3000)
-            
         } catch (error) {
-            setErrorPlacingOrder(true);
             setPlacingOrder(false);
+            setErrorPlacingOrder(true);
             setTimeout(()=>{
                 setErrorPlacingOrder(false)
-            }, 1500)
+            }, 2000)
         }
 
     }, [cartItems, totalAmount, dispatch, setErrorPlacingOrder, setOrderCompleted, setErrorPlacingOrder, addOrder]);
@@ -144,7 +146,9 @@ const CartScreen = props =>{
         
     <View style = {{flex: 1}}>
         <ActionConfirmModal isVisible = {orderCompleted} iconName = 'ios-bicycle' text = "Order Completed" text2 = "Check profile to track all orders" />
+        <ActionConfirmModal isVisible = {errorPlacingOrder} iconName = 'ios-warning' text = "Error" text2 = "Try again later" />
         <ActionConfirmModal loading = {true} isVisible = {placingOrder}/>
+
         {
         cartItems.length ?
             <FlatList

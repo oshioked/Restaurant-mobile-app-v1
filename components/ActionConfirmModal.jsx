@@ -8,7 +8,7 @@ const ActionConfirmModal = ({isVisible, loading, iconName, text, text2, onBackdr
     const Children = (
         <>
             <Ionicons name = {iconName} size = {106} color = {colors.primaryShade2}/>
-            <Text style = {{fontSize: 18, opacity: 0.6, fontWeight: '500'}}>{text}</Text> 
+            <Text style = {{fontSize: 18, opacity: 0.6, textAlign: 'center', fontWeight: '500'}}>{text}</Text> 
             {
                 text2 ?
                 <Text style = {{fontSize: 12, marginTop: 7, textAlign: 'center', opacity: 0.4,}}>{text2}</Text> 

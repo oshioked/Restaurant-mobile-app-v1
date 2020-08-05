@@ -237,6 +237,10 @@ export const addOrder = (cartItems, totalAmount) => async (dispatch, getState) =
             })
         })
         const data = await response.json();
+        
+        if(!response.ok){
+            throw new Error(data)
+        }
 
         dispatch({
             type: userTypes.ADD_ORDER,
