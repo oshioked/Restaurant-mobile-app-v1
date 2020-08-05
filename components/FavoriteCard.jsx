@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, Platform } from 'react-native';
 import Card from './Card';
 import {Ionicons} from '@expo/vector-icons';
@@ -6,16 +6,22 @@ import colors from '../constants/colors';
 import { useDispatch } from 'react-redux';
 import { removeFavMeal } from '../Redux/user/user.actions';
 import { addItem } from '../Redux/cart/cart.actions';
+import ActionConfirmModal from './ActionConfirmModal';
 
 const FavoriteCard = props =>{
     const dispatch = useDispatch();
+    const [addingToCart, setAddingToCart] = useState(false);
     
     const onRemoveMealHandler = () =>{
         dispatch(removeFavMeal(props.meal))
     }
 
-    const onAddToCart = () =>{
-        dispatch(addItem(props.meal))
+     const onAddToCart = async () =>{ 
+        setAddingToCart(true);
+        await dispatch(addItem(props.meal))
+        setTimeout(()=>{
+            setAddingToCart(false)
+        }, 1000);
     }
 
     const onMealSelect = () =>{
@@ -27,6 +33,7 @@ const FavoriteCard = props =>{
     return(
         <Card>
             <TouchableOpacity activeOpacity = {0.8} onPress = {onMealSelect} style = {styles.favoriteContainer}>
+            <ActionConfirmModal isVisible = {addingToCart} iconName = 'ios-basket' text = 'Added to Basket'/>
                 <Image style =  {styles.image} source = {{uri: props.meal.imageUri}}/>
                 <View>
                     <Text style = {styles.mealName}>{props.meal.title}</Text>

@@ -21,7 +21,7 @@ const CartScreen = props =>{
     const userBonusPercent = useSelector(state => state.user.bonusPercentage);
     const [placingOrder, setPlacingOrder] = useState(false);
     const [orderCompleted, setOrderCompleted] = useState(false);
-    const [errorPlacingOrder, setErrorPlacingOrder] = useState(false)
+    const [errorPlacingOrder, setErrorPlacingOrder] = useState(false);
 
     let totalTime;
     if(cartItems.length){
@@ -46,13 +46,31 @@ const CartScreen = props =>{
         Notifications.scheduleNotificationAsync({
             content:{
                 title: "Order Confirmation",
-                body: "Track all your current orders"
+                body: "Track all your current orders",
             },
             trigger:{
                 seconds: 10
             }
         })
     }
+
+    Notifications.setNotificationHandler({
+        handleNotification: async () =>{
+            return{
+                shouldShowAlert: true,
+                shouldPlaySound: true
+            }
+        }
+    })
+
+    useEffect(()=>{
+        const subscribe = Notifications.addNotificationResponseReceivedListener(notification =>{
+            if(notification.notification.request.content.title === "Order Confirmation"){
+                // props.navigation.navigate("Profile");
+                props.navigation.navigate("Order")
+            }
+        })
+    })
     
     useEffect(()=>{
         props.navigation.setParams({
@@ -65,7 +83,9 @@ const CartScreen = props =>{
 
     const placeOrderHandler = useCallback( async () =>{
         const hasPermission = await verifyPermission();
-        if(hasPermission) await scheduleNotification();
+        if(hasPermission){
+            await scheduleNotification();
+        } 
         setPlacingOrder(true)
         try {
             await dispatch(addOrder(cartItems, totalAmount));
