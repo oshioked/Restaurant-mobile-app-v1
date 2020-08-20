@@ -28,7 +28,7 @@ const SearchScreen = props =>{
                 />
             </View>
             <ScrollView contentContainerStyle = {styles.contentContainer}>
-                <Image source = {require('../../assets/images/searchScreenImage.png')}/>
+                <Image resizeMode = "contain" style = {styles.image} source = {require('../../assets/images/searchScreenImage.png')}/>
                 <Text style = {styles.textInstruction}>Try discovering new meals with search or explore meals based on parameters carefully selected by us.</Text>
                 <CustomButton onPress = {onExplorePress}>Explore</CustomButton>
             </ScrollView>
@@ -65,6 +65,10 @@ const styles = StyleSheet.create({
         fontSize: 14,
         marginVertical: 25,
         color: 'grey'
+    },
+    image:{
+        maxHeight: '50%',
+        width: '90%',
     }
 })
 

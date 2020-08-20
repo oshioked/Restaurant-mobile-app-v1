@@ -249,7 +249,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 0
     },
     emptyFavImage: {
-        // height: '45%',
+        maxHeight: '50%',
         width: '100%',
         marginBottom: 5
     },

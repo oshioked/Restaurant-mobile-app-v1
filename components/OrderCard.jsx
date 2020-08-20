@@ -32,8 +32,8 @@ const OrderCard = props =>{
         <Card>
             <View style = {styles.orderCard}>
                 <View style = {styles.timeStatusBlock}>
-                    <Text style = {styles.orderedDate}>{props.order.readableDate}</Text>
-                    <Text style = {styles.orderStatus}>{'Status: '}
+                    <Text allowFontScaling = {false} numberOfLines = {2} style = {styles.orderedDate}>{props.order.readableDate}</Text>
+                    <Text allowFontScaling = {false} numberOfLines = {2}  style = {styles.orderStatus}>{'Status: '}
                         <Text style = {{color: 'green', fontSize: 12}}>{props.order.status.toUpperCase()}</Text>
                     </Text>
                 </View>
@@ -82,10 +82,12 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     orderedDate: {
-        opacity: 0.3
+        opacity: 0.3,
+        maxWidth: '65%'
     },
     orderStatus: {
-        opacity: 0.5
+        opacity: 0.5,
+        maxWidth: '35%'
     },
     mealsRowText: {
         fontWeight: '600',

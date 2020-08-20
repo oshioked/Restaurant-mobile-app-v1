@@ -214,7 +214,7 @@ const RegisterForm = (props) =>{
                         {
                             isLoading ?
                             <ActivityIndicator size = 'small' color = 'white'/>
-                            : 'Sign In'
+                            : 'Register'
                         }
                     </CustomButton>
                 )

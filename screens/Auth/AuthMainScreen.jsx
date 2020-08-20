@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     headerBg: {
         width: '100%',
         opacity: 0.35,
-        height: '25%',
+        height: '30%',
         position: 'absolute'
     },
     header: {

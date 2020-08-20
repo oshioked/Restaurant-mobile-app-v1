@@ -22,7 +22,7 @@ const CompleteYourProfileSection = (props) => {
 
     const verifyCameraPermission = async () =>{
         const result = await Permissions.askAsync(Permissions.CAMERA, Permissions.CAMERA_ROLL);
-        if(result.status != 'granted'){
+        if(!result.granted){
             Alert.alert(
                 'Insufficient permission',
                 'Grant camera permission to use this feature',

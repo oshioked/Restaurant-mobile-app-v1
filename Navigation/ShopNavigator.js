@@ -99,14 +99,9 @@ const TabNavigator = createBottomTabNavigator({
         inactiveTintColor: '#A9A6A6',
         style:{
             backgroundColor: colors.primaryShade1,
+            height: 60,
             borderTopWidth: 0,
-            paddingVertical: 10,
-            shadowColor: '#A9A6A6',
-            shadowOpacity: 0.5,
-            shadowOffset: {width: 4, height: 4},
-            shadowRadius: 5,
-            elevation: 30
-
+            paddingVertical: 25,
         }
     }
 })

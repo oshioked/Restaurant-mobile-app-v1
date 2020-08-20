@@ -17,7 +17,7 @@ const AuthIntroScreen = props =>{
             <SafeAreaView  style = {{flex: 1}}>
                 <View style = {styles.screenContentContainer}>
                     <View style = {styles.textsContainer}>
-                        <Text style = {styles.textTitle}>Q U I C K E A T S</Text>
+                        <Text allowFontScaling = {false} style = {styles.textTitle}>Q U I C K E A T S</Text>
                         
                     </View>  
                     <View style = {styles.buttonContainer}>
