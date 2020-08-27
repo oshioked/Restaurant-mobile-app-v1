@@ -19,6 +19,7 @@ import AuthIntroScreen from '../screens/Auth/AuthIntroScreen';
 import AuthMainScreen from '../screens/Auth/AuthMainScreen';
 import StartUpScreen from '../screens/StartUpScreen';
 import GetLocationMapScreen from '../screens/Profile/GetLocationMapScreen';
+import {OnboardingScreen1, OnboardingScreen2, OnboardingScreen3} from '../screens/Onboarding/OnboardingScreens';
 
 const defaultStackNavOptions = {
     headerTintColor: 'black',
@@ -115,8 +116,15 @@ const AuthNavigator = createStackNavigator({
     }
 })
 
+const OnboardingNavigator = createSwitchNavigator({
+    Onboarding1: OnboardingScreen1,
+    Onboarding2: OnboardingScreen2,
+    Onboarding3: OnboardingScreen3
+})
+
 const MainNavigator = createSwitchNavigator({
     StartUp: StartUpScreen,
+    Onboarding: OnboardingNavigator,
     Auth: AuthNavigator,
     Shop: TabNavigator
 })
