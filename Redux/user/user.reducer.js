@@ -31,7 +31,8 @@ const getOrders = (orderResult) =>{
 }
 
 const userReducer = (state = initialState, action) =>{
-    switch (action.type) {
+    console.log(state, action)
+    switch (action.type) { 
 
         case authTypes.LOGIN_USER:
             const userData = action.payload;

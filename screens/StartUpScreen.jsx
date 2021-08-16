@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import {authTypes} from '../Redux/user/user.actions';
 
 const StartUpScreen = props =>{
+    console.log('called')
     const dispatch = useDispatch();
     useEffect(()=>{
         const firstTimeCheck = async () =>{
