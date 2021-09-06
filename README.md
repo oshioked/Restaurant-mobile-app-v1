@@ -2,6 +2,7 @@
 Restaurant mobile app built with react native (expo managed workflow)
 
 The node js server for this application is in <a href = "https://github.com/oshioked/Quickeats-v1-mobile-api">this repo</a>
+The landing page for this application is <a href = "https://quickeatss.herokuapp.com">https://quickeatss.herokuapp.com</a>
 
 Here are screenshots of some screens from this application
 
