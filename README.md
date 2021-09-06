@@ -2,12 +2,9 @@
 Restaurant mobile app built with react native (expo managed workflow)
 
 
-
 The node js server for this application is in <a href = "https://github.com/oshioked/Quickeats-v1-mobile-api">this repo</a>
 
 The landing page for this application is <a href = "https://quickeatss.herokuapp.com">https://quickeatss.herokuapp.com</a>
-
-See a case study of Quickeats version 2 here
 
 Here are screenshots of some screens from this application
 
@@ -18,3 +15,6 @@ Others include:
 Firebase media storage for storing users’ images.
 Users’ order tracking system and on-map address picker using Mapbox’s routing and geolocation API respectively.
 Push notifications alerts
+
+
+See a case study of Quickeats version 2 <a href = "https://oshioke.vercel.app">here</a>
