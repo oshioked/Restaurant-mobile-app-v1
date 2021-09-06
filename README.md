@@ -17,4 +17,4 @@ Users’ order tracking system and on-map address picker using Mapbox’s routin
 Push notifications alerts
 
 
-See a case study of Quickeats version 2 <a href = "https://oshioke.vercel.app">here</a>
+See a case study of Quickeats version 2 <a href = "https://oshioke.vercel.app/quickeats">here</a>
